@@ -154,26 +154,21 @@ def input_names(n_players):
     header_screen()
     assert n_players in [1, 2], "The number of names must be 1 or 2."
 
-    # 2 human players
-    if n_players == 2:
-        player1 = input("Name of 1st player ? \n")
-        print()
-        print("Name of 2nd player ? ")
-        not_valid = True
-        while not_valid:
-            player2 = input()
-            if player2 == player1:
-                print("Please choose a different name than 1st player")
-            else:
-                not_valid = False
-                print()
-        return player1, player2
-
     # 1 human player
-    else:
+    if n_players == 1:
         player = input("Name of player ? \n")
         print()
         return player
+
+    # 2 human players
+    player1 = input("Name of 1st player ? \n")
+    print()
+    print("Name of 2nd player ? ")
+    player2 = input()
+    while player2 == player1:
+        print("Please choose a different name than 1st player")
+        player2 = input()
+    return player1, player2
 
 
 def display_endgame(scores, name1, name2) -> bool:
