@@ -22,36 +22,36 @@ import os
 
 class Optimizer:
     """
-  This optimizer can be initialized for different values of epsilon 
-  (parameter of RL Agent) and different ways of training (i.e.
-  identity of opponent). Once initialized, it allows for some 
-  methods as grid-search which evaluates agent performance during
-  training or retrain_best_models which retrains a part of the
-  current best models.
-  """
+    This optimizer can be initialized for different values of epsilon 
+    (parameter of RL Agent) and different ways of training (i.e.
+    identity of opponent). Once initialized, it allows for some 
+    methods as grid-search which evaluates agent performance during
+    training or retrain_best_models which retrains a part of the
+    current best models.
+    """
 
     def __init__(
         self, epsilon_values, random_training=True, self_training=True, change_opp=True
     ):
         """
-    Specifies which epsilon values and which kind of opponents
-    are considered to optimize the learning agent strategy.
+        Specifies which epsilon values and which kind of opponents
+        are considered to optimize the learning agent strategy.
 
-    Parameters
-    ----------
-    epsilon_values: list of float (in [0,1])
-      List of values of epsilon considered.
-    random_training: boolean
-      Set to True to consider agents training against Random 
-      Agents.
-    self_training: boolean
-      Set to True to consider agents training against themselves.
-    change_opp: boolean
-      Set to True to achieve the optimization by changing the 
-      opponents of already trained models. For instance, if a 
-      previous model was trained against a Random Agent, this 
-      option allows to train it against itself.
-    """
+        Parameters
+        ----------
+        epsilon_values: list of float (in [0,1])
+        List of values of epsilon considered.
+        random_training: boolean
+        Set to True to consider agents training against Random 
+        Agents.
+        self_training: boolean
+        Set to True to consider agents training against themselves.
+        change_opp: boolean
+        Set to True to achieve the optimization by changing the 
+        opponents of already trained models. For instance, if a 
+        previous model was trained against a Random Agent, this 
+        option allows to train it against itself.
+        """
 
         self.epsilon_values = epsilon_values
 
@@ -68,54 +68,54 @@ class Optimizer:
 
     def grid_search(self, n_epochs, n_games_test=100, freq_test=0, retrain=False):
         """
-    Compute the fraction of an agent's wins over a given number of 
-    games against a Random Agent. This fraction is computed as a
-    function of the number of games used for training the agent.
-    At the end of all trainings, a tournament between all trained
-    agents occurs. 
+        Compute the fraction of an agent's wins over a given number of 
+        games against a Random Agent. This fraction is computed as a
+        function of the number of games used for training the agent.
+        At the end of all trainings, a tournament between all trained
+        agents occurs. 
 
-    Parameters
-    ----------
-    n_epochs: int
-      Number of epochs to train each model.
-    n_games_test: int
-      Number of games to test the training agent against a 
-      Random Agent.
-    freq_test: int
-      Number of epochs after which the training agent plays n_games_test
-      games against a Random Agent. If set to 1000, each 1000 epochs of
-      training, the training agent is tested against a Random Agent.
-      If set to 0, test occurs at the last epoch of training only.
-      If set to -1, there is no test during training.
-    retrain: boolean
-      Set to True to do the grid-search via training of already
-      trained models.
+        Parameters
+        ----------
+        n_epochs: int
+        Number of epochs to train each model.
+        n_games_test: int
+        Number of games to test the training agent against a 
+        Random Agent.
+        freq_test: int
+        Number of epochs after which the training agent plays n_games_test
+        games against a Random Agent. If set to 1000, each 1000 epochs of
+        training, the training agent is tested against a Random Agent.
+        If set to 0, test occurs at the last epoch of training only.
+        If set to -1, there is no test during training.
+        retrain: boolean
+        Set to True to do the grid-search via training of already
+        trained models.
 
-    Outputs
-    -------
-    For each value of epsilon and each kind of opponent:
-    * GS file path: TXT file
-      Located at: 
-      'Models/train/GS_epsilon_(epsilon_value)_vs(Random/Self).txt'.
-      File in which each line corresponds to an epoch test result:
-      'epoch, score of RL agent, number of finished games, 
-      n_games_test'.
-    * CSV model: CSV file
-      Located at:
-      'Models/greedy_(epsilon_value)_vs(Random/Self).csv'
-      File storing the Q-function of the model trained after 
-      n_epochs. The counter of state-action pairs is also stored at:
-      'Models/data/count_greedy_(epsilon_value)_vs_(Random/self).csv'.
-    Only once:
-    * Tournament report: CSV file
-      Located at: 'Models/results/(self.tournament_name).csv'.
-      File storing the results of each confrontation between 
-      any 2 of the trained agents.
-    * Tournament ranking: TXT file
-      Located at: 'Models/results/(self.tournament_name).txt'.
-      File ranking the agents using the results of the tournament,
-      with total score of each agent displayed.
-    """
+        Outputs
+        -------
+        For each value of epsilon and each kind of opponent:
+        * GS file path: TXT file
+        Located at: 
+        'Models/train/GS_epsilon_(epsilon_value)_vs(Random/Self).txt'.
+        File in which each line corresponds to an epoch test result:
+        'epoch, score of RL agent, number of finished games, 
+        n_games_test'.
+        * CSV model: CSV file
+        Located at:
+        'Models/greedy_(epsilon_value)_vs(Random/Self).csv'
+        File storing the Q-function of the model trained after 
+        n_epochs. The counter of state-action pairs is also stored at:
+        'Models/data/count_greedy_(epsilon_value)_vs_(Random/self).csv'.
+        Only once:
+        * Tournament report: CSV file
+        Located at: 'Models/results/(self.tournament_name).csv'.
+        File storing the results of each confrontation between 
+        any 2 of the trained agents.
+        * Tournament ranking: TXT file
+        Located at: 'Models/results/(self.tournament_name).txt'.
+        File ranking the agents using the results of the tournament,
+        with total score of each agent displayed.
+        """
 
         print("-----------")
         print("Grid-Search")
@@ -301,22 +301,22 @@ class Optimizer:
 
     def find_prev_epochs(self, epsilon, training_way):
         """
-    Find number of epochs previously used to train a given model. 
-    This function looks at the GS txt file corresponding to the 
-    model.
+        Find number of epochs previously used to train a given model. 
+        This function looks at the GS txt file corresponding to the 
+        model.
 
-    Parameters
-    ----------
-    epsilon: float
-      Parameter of agent during training.
-    training_way: string
-      Opponent of agent during training (Random, Self, ...).
+        Parameters
+        ----------
+        epsilon: float
+        Parameter of agent during training.
+        training_way: string
+        Opponent of agent during training (Random, Self, ...).
 
-    Return
-    ------
-    n_epochs: int
-      Number of epochs previously used to train the model.
-    """
+        Return
+        ------
+        n_epochs: int
+        Number of epochs previously used to train the model.
+        """
 
         n_epochs = 0
 
@@ -341,23 +341,23 @@ class Optimizer:
 
     def delete_temp(self, old_model, temp_model):
         """
-    Delete temporary files in case of 2 versions of same model 
-    (but different times of training). Keep the best model and 
-    delete the rest.
+        Delete temporary files in case of 2 versions of same model 
+        (but different times of training). Keep the best model and 
+        delete the rest.
 
-    Parameters
-    ----------
-    old_model: string
-      Model filename before training.
-    temp_model: string
-      Temporary model filename (after training).
+        Parameters
+        ----------
+        old_model: string
+        Model filename before training.
+        temp_model: string
+        Temporary model filename (after training).
 
-    Return
-    ------
-    use_training: boolean
-      False only if old model wins against new temp model.
-      True otherwise.
-    """
+        Return
+        ------
+        use_training: boolean
+        False only if old model wins against new temp model.
+        True otherwise.
+        """
 
         use_training = True
         # Several versions of same model
@@ -392,32 +392,32 @@ class Optimizer:
 
     def tournament(self, change_opp=False):
         """
-    Method to rank the different models obtained after any training. 
-    For the values of the factor epsilon of an RL Agent, declared 
-    in init method, this method creates a tournament for the 
-    corresponding different models. Each model plays 10 games 
-    against all others and the scores of each model against another 
-    are stored in a CSV file. A TXT file is also generated using
-    the CSV file: it displays rankings of each model, alongside
-    its total score against all other models.
+        Method to rank the different models obtained after any training. 
+        For the values of the factor epsilon of an RL Agent, declared 
+        in init method, this method creates a tournament for the 
+        corresponding different models. Each model plays 10 games 
+        against all others and the scores of each model against another 
+        are stored in a CSV file. A TXT file is also generated using
+        the CSV file: it displays rankings of each model, alongside
+        its total score against all other models.
 
-    Parameter
-    ---------
-    change_opp: boolean
-      Set to True to consider agents trained with mixed opponents
-      participating to the tournament.
+        Parameter
+        ---------
+        change_opp: boolean
+        Set to True to consider agents trained with mixed opponents
+        participating to the tournament.
 
-    Outputs
-    -------
-    Tournament report: CSV file
-      Located at: 'Models/results/(self.tournament_name).csv'.
-      File storing the results of each confrontation between 2 
-      agents.
-    Tournament ranking: TXT file
-      Located at: 'Models/results/(self.tournament_name).txt'.
-      File ranking the agents using the results of the tournament,
-      with total score of each agent displayed.
-    """
+        Outputs
+        -------
+        Tournament report: CSV file
+        Located at: 'Models/results/(self.tournament_name).csv'.
+        File storing the results of each confrontation between 2 
+        agents.
+        Tournament ranking: TXT file
+        Located at: 'Models/results/(self.tournament_name).txt'.
+        File ranking the agents using the results of the tournament,
+        with total score of each agent displayed.
+        """
 
         n_players = len(self.epsilon_values) * (
             (int(self.random_training) + int(self.self_training))
@@ -552,22 +552,22 @@ class Optimizer:
 
     def tournament_ranking(self, input_filename, output_filename):
         """
-    Takes a tournament report CSV file as input and outputs 
-    the final scores of each player, as long as their ranking.
+        Takes a tournament report CSV file as input and outputs 
+        the final scores of each player, as long as their ranking.
 
-    Parameters
-    ----------
-    input_filename: string
-      Name of tournament report CSV file.
-    output_filename: string
-      Name of tournament ranking TXT file.
+        Parameters
+        ----------
+        input_filename: string
+        Name of tournament report CSV file.
+        output_filename: string
+        Name of tournament ranking TXT file.
 
-    Output
-    ------
-    Models/results/(output_filename).txt: TXT file
-      File ranking the agents using the results of the tournament,
-      with total score of each agent displayed.
-    """
+        Output
+        ------
+        Models/results/(output_filename).txt: TXT file
+        File ranking the agents using the results of the tournament,
+        with total score of each agent displayed.
+        """
 
         # Prepare output file
         with open("Models/results/" + output_filename + ".txt", "w") as f:
@@ -626,41 +626,41 @@ class Optimizer:
 
     def retrain_best_models(self, n_epochs, common_train_time=False, min_frac=0.3):
         """
-    Looks at previous tournament ranking TXT file (whose name is
-    self.tournament_name) and selects some of the best current 
-    models according to their total score. The values of epsilon
-    not represented by those best models are definitely discarded
-    by the Optimizer. Once selected, those models are retrained 
-    for a given number of epochs, without playing against a 
-    Random Agent during training (as opposed to grid-search method), 
-    and eventually participate to a tournament.
+        Looks at previous tournament ranking TXT file (whose name is
+        self.tournament_name) and selects some of the best current 
+        models according to their total score. The values of epsilon
+        not represented by those best models are definitely discarded
+        by the Optimizer. Once selected, those models are retrained 
+        for a given number of epochs, without playing against a 
+        Random Agent during training (as opposed to grid-search method), 
+        and eventually participate to a tournament.
 
-    Parameters
-    ----------
-    n_epochs: int
-      Number of epochs used to retrain an already trained model.
-    common_train_time: boolean
-      Set to True to adjust all training times of considered 
-      models (from the start) so that all models have been 
-      trained during the same global number of epochs.
-    min_frac: float
-      Used to keep only a part of previous trained models to 
-      retrain them. Using the previous tournament results, only 
-      the models with total score above max_score * min_frac are 
-      retrained (max_score is the maximum score achieved by a 
-      model during latter tournament).
+        Parameters
+        ----------
+        n_epochs: int
+        Number of epochs used to retrain an already trained model.
+        common_train_time: boolean
+        Set to True to adjust all training times of considered 
+        models (from the start) so that all models have been 
+        trained during the same global number of epochs.
+        min_frac: float
+        Used to keep only a part of previous trained models to 
+        retrain them. Using the previous tournament results, only 
+        the models with total score above max_score * min_frac are 
+        retrained (max_score is the maximum score achieved by a 
+        model during latter tournament).
 
-    Outputs
-    -------
-    Tournament report: CSV file
-      Located at: 'Models/results/(self.tournament_name).csv'.
-      File storing the results of each confrontation between 2 
-      agents.
-    Tournament ranking: TXT file
-      Located at: 'Models/results/(self.tournament_name).txt'.
-      File ranking the agents using the results of the tournament,
-      with total score of each agent displayed.
-    """
+        Outputs
+        -------
+        Tournament report: CSV file
+        Located at: 'Models/results/(self.tournament_name).csv'.
+        File storing the results of each confrontation between 2 
+        agents.
+        Tournament ranking: TXT file
+        Located at: 'Models/results/(self.tournament_name).txt'.
+        File ranking the agents using the results of the tournament,
+        with total score of each agent displayed.
+        """
 
         # Look at tournament txt output
         file_path = "Models/results/" + self.tournament_name + ".txt"

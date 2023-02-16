@@ -85,25 +85,25 @@ class TapnSwap:
 
     def list_actions_tap(self, pair0):
         """
-      Gives the list of possible tap actions for pair0.
+        Gives the list of possible tap actions for pair0.
 
-      Parameter
-      ---------
-      pair0: int (0 or 1)
-        Index of pair of hands for which one wants to know 
-        the list of possible tap actions.
+        Parameter
+        ---------
+        pair0: int (0 or 1)
+            Index of pair of hands for which one wants to know 
+            the list of possible tap actions.
 
-      Return
-      ------
-      list_actions: list of possible tap actions.
-        Each tap action has the form [0, tapping_hand, tapped_hand] 
-        where:
-        * tapping_hand: int (0 or 1)
-            Hand of pair0 involved in tap action.
-        * tapped_hand: int (0 or 1)
-            Hand of the other pair that receives the 
-            tap action of pair0.
-      """
+        Return
+        ------
+        list_actions: list of possible tap actions.
+            Each tap action has the form [0, tapping_hand, tapped_hand] 
+            where:
+            * tapping_hand: int (0 or 1)
+                Hand of pair0 involved in tap action.
+            * tapped_hand: int (0 or 1)
+                Hand of the other pair that receives the 
+                tap action of pair0.
+        """
 
         list_actions = []
         for i in range(2):
@@ -115,25 +115,25 @@ class TapnSwap:
 
     def list_actions_swap(self, pair0):
         """
-      Gives the list of possible swap actions for pair0.
+        Gives the list of possible swap actions for pair0.
 
-      Parameter
-      ---------
-      pair0: int (0 or 1)
-        Index of pair of hands for which one wants to know 
-        the list of possible swap actions.
+        Parameter
+        ---------
+        pair0: int (0 or 1)
+            Index of pair of hands for which one wants to know 
+            the list of possible swap actions.
 
-      Return
-      ------
-      list_actions: list of possible swap actions.
-        Each swap action has the form [1, giving_hand, exchange_nbr] 
-        where:
-        * giving_hand: int (0 or 1) 
-            Hand of pair 0 that gives some of its fingers 
-            to the other hand.
-      * exchange_nbr: int
-            Amount of such fingers.
-      """
+        Return
+        ------
+        list_actions: list of possible swap actions.
+            Each swap action has the form [1, giving_hand, exchange_nbr] 
+            where:
+            * giving_hand: int (0 or 1) 
+                Hand of pair 0 that gives some of its fingers 
+                to the other hand.
+        * exchange_nbr: int
+                Amount of such fingers.
+        """
 
         list_actions = []
         sum_hands = self.hands[pair0, 0] + self.hands[pair0, 1]
@@ -167,31 +167,31 @@ class TapnSwap:
 
     def list_actions_h(self, pair0):
         """
-      Gives the possible actions for pair0 in text format 
-      (non uniques -> might observe repetitions). 
-      
-      Parameter
-      ---------
-      pair0: int (0 or 1)
-        Index of pair of hands for which one wants to know 
-        the list of possible actions.
+        Gives the possible actions for pair0 in text format 
+        (non uniques -> might observe repetitions). 
+        
+        Parameter
+        ---------
+        pair0: int (0 or 1)
+            Index of pair of hands for which one wants to know 
+            the list of possible actions.
 
-      Return
-      ------
-      actions_h: list of possible actions in text format.
-        Each action has the form 'Tap with fingers_on_tapping_hand on 
-        fingers_on_tapped_hand' or 'Swap fingers_on_hand0_pair0 -
-        fingers_on_hand1_pair0 for fingers_on_new_hand0_pair0 -
-        fingers_on_new_hand1_pair0' where:
-        * fingers_on_tapping_hand: int
-            Amount of fingers found on tapping hand before tap action.
-        * fingers_on_tapped_hand: int
-            Amount of fingers on tapped hand before tap action.
-        * fingers_on_hand[i]_pair0: int
-            Amount of fingers found on hand [i] of pair 0 before swap.
-        * fingers_on_new_hand[i]_pair0: int
-            Amount of fingers found on hand[i] of pair0 after swap.
-      """
+        Return
+        ------
+        actions_h: list of possible actions in text format.
+            Each action has the form 'Tap with fingers_on_tapping_hand on 
+            fingers_on_tapped_hand' or 'Swap fingers_on_hand0_pair0 -
+            fingers_on_hand1_pair0 for fingers_on_new_hand0_pair0 -
+            fingers_on_new_hand1_pair0' where:
+            * fingers_on_tapping_hand: int
+                Amount of fingers found on tapping hand before tap action.
+            * fingers_on_tapped_hand: int
+                Amount of fingers on tapped hand before tap action.
+            * fingers_on_hand[i]_pair0: int
+                Amount of fingers found on hand [i] of pair 0 before swap.
+            * fingers_on_new_hand[i]_pair0: int
+                Amount of fingers found on hand[i] of pair0 after swap.
+        """
 
         actions = self.list_actions_tap(pair0) + self.list_actions_swap(pair0)
         actions_h = []
@@ -218,20 +218,20 @@ class TapnSwap:
 
     def list_actions_hu(self, pair0):
         """
-      Gives the possible actions for pair0 in text format (uniques).
+        Gives the possible actions for pair0 in text format (uniques).
 
-      Parameter
-      ---------
-      pair0: int (0 or 1)
-        Index of pair of hands for which one wants to know 
-        the list of possible actions.
+        Parameter
+        ---------
+        pair0: int (0 or 1)
+            Index of pair of hands for which one wants to know 
+            the list of possible actions.
 
-      Return
-      ------
-      list of (unique) possible actions in text format.
-        Each action has the same format than the output of 
-        list_actions_h method.
-      """
+        Return
+        ------
+        list of (unique) possible actions in text format.
+            Each action has the same format than the output of 
+            list_actions_h method.
+        """
 
         actions_h = self.list_actions_h(pair0)
         seen = set()
@@ -283,16 +283,16 @@ class TapnSwap:
 
     def game_over(self):
         """
-      Check if game over.
+        Check if game over.
 
-      Return
-      ------
-      game_over: boolean
-      winner: 
-      * winner = -1 if not game_over
-      * winner = 0 if self.hands[1] = [0,0]
-      * winner = 1 if self.hands[0] = [0,0]. 
-      """
+        Return
+        ------
+        game_over: boolean
+        winner: 
+        * winner = -1 if not game_over
+        * winner = 0 if self.hands[1] = [0,0]
+        * winner = 1 if self.hands[0] = [0,0]. 
+        """
 
         game_over = not bool(
             (self.hands[0][0] + self.hands[0][1])

@@ -13,17 +13,17 @@ import time
 
 def tap_valid_digits(list_numbers):
     """
-  Ask a valid number to user among those found in list_numbers.
+    Ask a valid number to user among those found in list_numbers.
 
-  Parameter
-  ---------
-  list_numbers: list [1,2,3,...] of valid numbers.
+    Parameter
+    ---------
+    list_numbers: list [1,2,3,...] of valid numbers.
 
-  Return
-  ------
-  result: string
-    Valid input of user. 
-  """
+    Return
+    ------
+    result: string
+        Valid input of user. 
+    """
 
     # Loop until the user gives an element of list_numbers
     not_valid = True
@@ -60,20 +60,20 @@ def tap_valid_digits(list_numbers):
 
 def show_score(tapnswap, names, player_idx, invert=False):
     """
-  Show scores stored in tapnswap at player_idx's round.
+    Show scores stored in tapnswap at player_idx's round.
 
-  Parameters
-  ----------
-  tapnswap: instance of TapnSwap.
-  names: list of 2 strings
-    List containing the names of the 2 current players.
-  player_idx: int (0 or 1)
-    Index of player which has currently to play.
-  invert: boolean
-    If set to False, the player whose name is names[player_idx]
-    is placed below its opponent. If True, the player below is
-    names[1-player_idx].
-  """
+    Parameters
+    ----------
+    tapnswap: instance of TapnSwap.
+    names: list of 2 strings
+        List containing the names of the 2 current players.
+    player_idx: int (0 or 1)
+        Index of player which has currently to play.
+    invert: boolean
+        If set to False, the player whose name is names[player_idx]
+        is placed below its opponent. If True, the player below is
+        names[1-player_idx].
+    """
 
     # Name of player's round
     round_name = names[player_idx]
@@ -115,15 +115,15 @@ def show_score(tapnswap, names, player_idx, invert=False):
 
 def user_choose_action(tapnswap, player_idx):
     """
-  Ask the user indexed by player_idx an action among all 
-  the possibilities and take this action.
+    Ask the user indexed by player_idx an action among all 
+    the possibilities and take this action.
 
-  Parameters
-  ----------
-  tapnswap: instance of TapnSwap.
-  player_idx: int (0 or 1)
-    Index of player to choose action.
-  """
+    Parameters
+    ----------
+    tapnswap: instance of TapnSwap.
+    player_idx: int (0 or 1)
+        Index of player to choose action.
+    """
 
     print("Choose an action")
 
@@ -142,25 +142,25 @@ def user_choose_action(tapnswap, player_idx):
 
 def check_game_over(tapnswap, names, player_idx):
     """
-  Check if the game is over at player_idx's round and display the 
-  end of the game.
+    Check if the game is over at player_idx's round and display the 
+    end of the game.
 
-  Parameters
-  ----------
-  tapnswap: instance of TapnSwap.
-  names: list of 2 strings
-    List containing the names of the 2 current players.
-  player_idx: int (0 or 1)
-    Index of player who has just finished its round.
+    Parameters
+    ----------
+    tapnswap: instance of TapnSwap.
+    names: list of 2 strings
+        List containing the names of the 2 current players.
+    player_idx: int (0 or 1)
+        Index of player who has just finished its round.
 
-  Return
-  ------
-  game_over: boolean.
-  winner: 
-  * winner = -1 if not game_over.
-  * winner = 0 if names[0] has won.
-  * winner = 1 if names[1] has won. 
-  """
+    Return
+    ------
+    game_over: boolean.
+    winner: 
+    * winner = -1 if not game_over.
+    * winner = 0 if names[0] has won.
+    * winner = 1 if names[1] has won. 
+    """
 
     # Check
     game_over, winner = tapnswap.game_over()
@@ -178,22 +178,22 @@ def check_game_over(tapnswap, names, player_idx):
 
 def game_1vs1(tapnswap, player1, player2):
     """
-  Display the game for 1 human vs 1 other human.
+    Display the game for 1 human vs 1 other human.
 
-  Parameters
-  ----------
-  tapnswap: instance of TapnSwap.
-  player1, player2: strings
-    Names of the 2 players.
+    Parameters
+    ----------
+    tapnswap: instance of TapnSwap.
+    player1, player2: strings
+        Names of the 2 players.
 
-  Return
-  ------
-  game_over: boolean.
-  winner: 
-  * winner = -1 if not game_over.
-  * winner = 0 if player1 has won.
-  * winner = 1 if player2 has won. 
-  """
+    Return
+    ------
+    game_over: boolean.
+    winner: 
+    * winner = -1 if not game_over.
+    * winner = 0 if player1 has won.
+    * winner = 1 if player2 has won. 
+    """
 
     tapnswap.reset()
 
@@ -227,27 +227,27 @@ def game_1vs1(tapnswap, player1, player2):
 
 def game_1vsAgent(tapnswap, player, agent, greedy=False):
     """
-  Display the game for 1 human vs 1 agent.
+    Display the game for 1 human vs 1 agent.
 
-  Parameters
-  ----------
-  tapnswap: instance of TapnSwap.
-  player: string
-    Name of player.
-  agent: instance of Agent to play against user.
-  greedy: boolean. 
-    Not used for training here but, if set to True, allows to use 
-    greedy policy (with epsilon) to add some randomness in agent 
-    choices while setting it to False leads to optimal choices.
+    Parameters
+    ----------
+    tapnswap: instance of TapnSwap.
+    player: string
+        Name of player.
+    agent: instance of Agent to play against user.
+    greedy: boolean. 
+        Not used for training here but, if set to True, allows to use 
+        greedy policy (with epsilon) to add some randomness in agent 
+        choices while setting it to False leads to optimal choices.
 
-  Return
-  ------
-  game_over: boolean.
-  winner: 
-  * winner = -1 if not game_over.
-  * winner = 0 if player has won.
-  * winner = 1 if agent has won. 
-  """
+    Return
+    ------
+    game_over: boolean.
+    winner: 
+    * winner = -1 if not game_over.
+    * winner = 0 if player has won.
+    * winner = 1 if agent has won. 
+    """
 
     tapnswap.reset()
 

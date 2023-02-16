@@ -15,26 +15,26 @@ import numpy as np
 
 class Agent:
     """
-  Class of agent used to play with user and used for training.
-  """
+    Class of agent used to play with user and used for training.
+    """
 
     def __init__(self):
         pass
 
     def random_action(self, actions):
         """
-    Gives a random action among a list of possible actions.
+        Gives a random action among a list of possible actions.
 
-    Parameter
-    ---------
-    actions: list
-      List of actions in TapnSwap format.
+        Parameter
+        ---------
+        actions: list
+        List of actions in TapnSwap format.
 
-    Return
-    ------
-    Random action within the list actions (same format than
-    format used by TapnSwap).
-    """
+        Return
+        ------
+        Random action within the list actions (same format than
+        format used by TapnSwap).
+        """
 
         # Fix seed
         np.random.seed()
@@ -50,34 +50,34 @@ class Agent:
 
 class RandomAgent(Agent):
     """
-  Class of random agent.
-  """
+    Class of random agent.
+    """
 
     def choose_action(self, states, actions, greedy=False):
         """
-    Choose a purely random action among possible actions.
-    """
+        Choose a purely random action among possible actions.
+        """
 
         return self.random_action(actions)
 
 
 class RLAgent(Agent):
     """
-  Class of agent trained by Q-learning.
-  """
+    Class of agent trained by Q-learning.
+    """
 
     def __init__(self, epsilon=0.0, gamma=1.0):
         """
-    Build a coder and decoder of states and actions from 
-    TapnSwap format to integers.
+        Build a coder and decoder of states and actions from 
+        TapnSwap format to integers.
 
-    Parameters
-    ----------
-    epsilon: float (in [0,1])
-      Fraction of greedy random decisions.
-    gamma: float (in [0,1])
-      Factor of significance of first actions over last ones.
-    """
+        Parameters
+        ----------
+        epsilon: float (in [0,1])
+        Fraction of greedy random decisions.
+        gamma: float (in [0,1])
+        Factor of significance of first actions over last ones.
+        """
 
         # Get integer coding of each state of original format
         # [ [hand0_p0, hand1_p0], [hand0_p1, hand1_p1] ]
@@ -99,11 +99,11 @@ class RLAgent(Agent):
 
     def build_state_coder(self):
         """
-    Build a dictionary {state: idx} where: 
-    * state is a tupled version of the state in format given by 
-      TapnSwap instance -> ex: ( (1,1), (1,1) ).
-    * idx is its coding integer.
-    """
+        Build a dictionary {state: idx} where: 
+        * state is a tupled version of the state in format given by 
+        TapnSwap instance -> ex: ( (1,1), (1,1) ).
+        * idx is its coding integer.
+        """
 
         # First build list of states for 1 pair of hands
         list_states_pair0_diff = [[i, j] for i in range(5) for j in range(5) if i != j]
@@ -122,11 +122,11 @@ class RLAgent(Agent):
 
     def build_action_coder(self):
         """
-    Build a dictionary {action: idx} where:
-    * action is a tupled version of the action in format given by
-      TapnSwap instance -> ex: (0,1,0).
-    * idx is its coding integer.
-    """
+        Build a dictionary {action: idx} where:
+        * action is a tupled version of the action in format given by
+        TapnSwap instance -> ex: (0,1,0).
+        * idx is its coding integer.
+        """
 
         # Build list of all actions
         list_actions_tap = [tuple([0, i, j]) for i in range(2) for j in range(2)]
@@ -138,18 +138,18 @@ class RLAgent(Agent):
 
     def code_state(self, raw_state):
         """
-    Code raw state from TapnSwap format to 
-    agent state format (integer) using dictionary state_coder.
+        Code raw state from TapnSwap format to 
+        agent state format (integer) using dictionary state_coder.
 
-    Parameter
-    ---------
-    raw_state: list
-      State in TapnSwap format -> ex: [ [1,2], [3,4] ]. 
+        Parameter
+        ---------
+        raw_state: list
+        State in TapnSwap format -> ex: [ [1,2], [3,4] ]. 
 
-    Return
-    ------
-    Corresponding state in agent format (int).
-    """
+        Return
+        ------
+        Corresponding state in agent format (int).
+        """
 
         # Tupled version of raw state
         raw_state_t = tuple((tuple(raw_state[0]), tuple(raw_state[1])))
@@ -160,19 +160,19 @@ class RLAgent(Agent):
 
     def code_actions(self, raw_actions):
         """
-    Code raw actions from TapnSwap format to 
-    agent actions format (integers) using dictionary action_coder.
+        Code raw actions from TapnSwap format to 
+        agent actions format (integers) using dictionary action_coder.
 
-    Parameter
-    ---------
-    raw_actions: list
-      List of actions to code. Each action in the list 
-      is in the TapnSwap format -> ex: [0,1,1].
+        Parameter
+        ---------
+        raw_actions: list
+        List of actions to code. Each action in the list 
+        is in the TapnSwap format -> ex: [0,1,1].
 
-    Return
-    ------
-    List of int: Corresponding actions in agent format.
-    """
+        Return
+        ------
+        List of int: Corresponding actions in agent format.
+        """
 
         # If there is only 1 raw_action in raw_actions
         if type(raw_actions[0]) != list:
@@ -192,18 +192,18 @@ class RLAgent(Agent):
 
     def decode_action(self, action):
         """
-    Decode action from agent format to TapnSwap format.
+        Decode action from agent format to TapnSwap format.
 
-    Parameter
-    ---------
-    action: int
-      Action in agent format (integers found in dictionary
-      action_coder).
+        Parameter
+        ---------
+        action: int
+        Action in agent format (integers found in dictionary
+        action_coder).
 
-    Return
-    ------
-    Corresponding action in TapnSwap format.
-    """
+        Return
+        ------
+        Corresponding action in TapnSwap format.
+        """
 
         # Tupled version of action, found in dictionary of actions
         action_t = list(self.action_coder.keys())[
@@ -217,18 +217,18 @@ class RLAgent(Agent):
 
     def decode_state(self, state):
         """
-    Decode state from agent format to TapnSwap format. 
+        Decode state from agent format to TapnSwap format. 
 
-    Parameter
-    ---------
-    state: int
-      State in agent format (integer found in dictionary 
-      state_coder).
+        Parameter
+        ---------
+        state: int
+        State in agent format (integer found in dictionary 
+        state_coder).
 
-    Return
-    ------
-    Corresponding state in TapnSwap format.
-    """
+        Return
+        ------
+        Corresponding state in TapnSwap format.
+        """
 
         # Tupled version of state, found in dictionary of states
         state_t = list(self.state_coder.keys())[
@@ -239,24 +239,24 @@ class RLAgent(Agent):
 
     def choose_action(self, raw_state, raw_actions, greedy=False):
         """
-    Choose an epsilon-greedy action at current state among a 
-    list of possible actions.
+        Choose an epsilon-greedy action at current state among a 
+        list of possible actions.
 
-    Parameters
-    ----------
-    raw_state: list
-      Current state in TapnSwap format.
-    raw_actions: list
-      List of possible current actions in TapnSwap format.
-    greedy: boolean
-      If set to True, it gives epsilon-greedy decisions
-      while, if set to False, it gives optimal decisions.
+        Parameters
+        ----------
+        raw_state: list
+        Current state in TapnSwap format.
+        raw_actions: list
+        List of possible current actions in TapnSwap format.
+        greedy: boolean
+        If set to True, it gives epsilon-greedy decisions
+        while, if set to False, it gives optimal decisions.
 
-    Return
-    ------
-    raw_action: list
-      Action chosen by agent in TapnSwap format.
-    """
+        Return
+        ------
+        raw_action: list
+        Action chosen by agent in TapnSwap format.
+        """
 
         # Coding of state
         state = self.code_state(raw_state)
@@ -286,20 +286,20 @@ class RLAgent(Agent):
 
     def update_Q(self, raw_state, raw_action, reward, raw_next_state):
         """
-    Update of Q function using Temporal Difference
-    on current transition with dynamic learning rate.
+        Update of Q function using Temporal Difference
+        on current transition with dynamic learning rate.
 
-    Parameters
-    ----------
-    raw_state: list
-      Current state in TapnSwap format.
-    raw_action: list
-      Current actions in TapnSwap format.
-    reward: float
-      Current reward.
-    raw_next_state: list
-      Next state in TapnSwap format.
-    """
+        Parameters
+        ----------
+        raw_state: list
+        Current state in TapnSwap format.
+        raw_action: list
+        Current actions in TapnSwap format.
+        reward: float
+        Current reward.
+        raw_next_state: list
+        Next state in TapnSwap format.
+        """
 
         # Decoding into agent format
         state = self.code_state(raw_state)
@@ -319,18 +319,18 @@ class RLAgent(Agent):
 
     def load_model(self, filename):
         """
-    Load trained model of format CSV in which is stored 
-    the trained matrix Q and the counter of state-action pairs
-    for future training. Update the variables self.Q and 
-    self.count_state_action.
+        Load trained model of format CSV in which is stored 
+        the trained matrix Q and the counter of state-action pairs
+        for future training. Update the variables self.Q and 
+        self.count_state_action.
 
-    Parameter
-    ---------
-    filename : string
-      The path to Q matrix CSV file is ./Models/filename.csv 
-      while the counter of state-action pairs is located at 
-      ./Models/data/filename.csv.
-    """
+        Parameter
+        ---------
+        filename : string
+        The path to Q matrix CSV file is ./Models/filename.csv 
+        while the counter of state-action pairs is located at 
+        ./Models/data/filename.csv.
+        """
 
         # Load arrays as numpy arrays
         self.Q = np.loadtxt("Models/" + filename + ".csv", delimiter=",")

@@ -107,7 +107,7 @@ def game_manager():
                         game_manager()
 
 
-def options(option1, option2, choice_sent, comeback=False):
+def options(option1: str, option2: str, choice_sent: str, comeback=False):
     """
     Display a menu with 2 options, along with a sentence explaining
     what are the choices.
@@ -130,9 +130,9 @@ def options(option1, option2, choice_sent, comeback=False):
     header_screen()
 
     # Print options
-    print(str("1  " + str(option1)).center(40))
+    print(f"1 {option1}".center(40))
     print()
-    print(str(" 2  " + str(option2)).center(40))
+    print(f"2 {option2}".center(40))
     print("\n\n")
 
     # Ask user to choose

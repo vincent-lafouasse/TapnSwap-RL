@@ -30,47 +30,47 @@ def game_2Agents(
     verbose=False,
 ):
     """
-  Manages a game between 2 agents (agent1, agent2) potentially 
-  time-limited, with possibility to train them, to confront 1 of 
-  them through a game with user before the game between the 2 agents 
-  (agent1, agent2) and to test 1 of them through several games 
-  against a Random Agent after the game between the 2 agents 
-  (agent1, agent2).
+    Manages a game between 2 agents (agent1, agent2) potentially 
+    time-limited, with possibility to train them, to confront 1 of 
+    them through a game with user before the game between the 2 agents 
+    (agent1, agent2) and to test 1 of them through several games 
+    against a Random Agent after the game between the 2 agents 
+    (agent1, agent2).
 
-  Parameters
-  ----------
-  agent1, agent2: instances of Agent
-    Agents involved in the game.
-  start_idx: -1, 0 or 1
-    Index of the agent that starts the game 
-    (0: agent1, 1: agent2, -1: random).
-  train: boolean
-    Set to True to train both agents.
-  time_limit: int
-    Maximum number of rounds between the 2 agents 
-    (possibility of loops with optimal actions).
-    Avoid to set it to 0 in case of identical agents.
-  n_games_test: int
-    Number of games between agent1 and a Random Agent following
-    the game between agent1 and agent2.
-  play_checkpoint_usr: boolean
-    Set to True for a game between the user and agent1 
-    preceding the game between agent1 and agent2.
-  verbose: boolean
-    Set to True for a written explanation of each round.
+    Parameters
+    ----------
+    agent1, agent2: instances of Agent
+        Agents involved in the game.
+    start_idx: -1, 0 or 1
+        Index of the agent that starts the game 
+        (0: agent1, 1: agent2, -1: random).
+    train: boolean
+        Set to True to train both agents.
+    time_limit: int
+        Maximum number of rounds between the 2 agents 
+        (possibility of loops with optimal actions).
+        Avoid to set it to 0 in case of identical agents.
+    n_games_test: int
+        Number of games between agent1 and a Random Agent following
+        the game between agent1 and agent2.
+    play_checkpoint_usr: boolean
+        Set to True for a game between the user and agent1 
+        preceding the game between agent1 and agent2.
+    verbose: boolean
+        Set to True for a written explanation of each round.
 
-  Return
-  ------
-  game_over: boolean.
-  winner: index of winner agent (0: agent1, 1: agent2, -1: tie).
-  test_results: list of int
-    Only working if n_games_test > 0 (otherwise empty list 
-    by default). If n_games_test > 0:
-    * test_results[0]: number of finished games.
-    * test_results[1]: number of games = n_games_test.
-    * test_results[2]: score of agent1.
-    * test_results[3]: score of Random Agent.
-  """
+    Return
+    ------
+    game_over: boolean.
+    winner: index of winner agent (0: agent1, 1: agent2, -1: tie).
+    test_results: list of int
+        Only working if n_games_test > 0 (otherwise empty list 
+        by default). If n_games_test > 0:
+        * test_results[0]: number of finished games.
+        * test_results[1]: number of games = n_games_test.
+        * test_results[2]: score of agent1.
+        * test_results[3]: score of Random Agent.
+    """
 
     tapnswap = TapnSwap()
     tapnswap.reset()
@@ -196,27 +196,27 @@ def game_2Agents(
 
 def compare_agents(agent1, agent2, n_games, time_limit=None, verbose=True):
     """
-  Manages competitive games between 2 agents and return final scores.
+    Manages competitive games between 2 agents and return final scores.
 
-  Parameters
-  ----------
-  agent1, agent2: instances of Agent.
-  n_games: int
-    Number of games used to compare both agents.
-  time_limit: int (or None)
-    Maximum number of rounds between the 2 agents (possibility of 
-    loops with optimal actions).
-  verbose: boolean
-    Set to True to know which of the n_games is currently played.
+    Parameters
+    ----------
+    agent1, agent2: instances of Agent.
+    n_games: int
+        Number of games used to compare both agents.
+    time_limit: int (or None)
+        Maximum number of rounds between the 2 agents (possibility of 
+        loops with optimal actions).
+    verbose: boolean
+        Set to True to know which of the n_games is currently played.
 
-  Return
-  ------
-  results: list of int
-    results[0]: number of finished games.
-    results[1]: number of games = n_games.
-    results[2]: score of agent1.
-    results[3]: score of agent2.
-  """
+    Return
+    ------
+    results: list of int
+        results[0]: number of finished games.
+        results[1]: number of games = n_games.
+        results[2]: score of agent1.
+        results[3]: score of agent2.
+    """
 
     start_idx = 0
     scores = [0, 0]
@@ -264,66 +264,66 @@ def train(
     verbose=False,
 ):
     """
-  Train 2 agents by making them play and learn together. Save the
-  learned Q-function into CSV file. It is possible to confront 1 of 
-  the agents (against either the user or a Random Agent) during 
-  training, as often as one wants. It is also possible to train an already 
-  trained model.
+    Train 2 agents by making them play and learn together. Save the
+    learned Q-function into CSV file. It is possible to confront 1 of 
+    the agents (against either the user or a Random Agent) during 
+    training, as often as one wants. It is also possible to train an already 
+    trained model.
 
-  Parameters
-  ----------
-  n_epochs: int
-    Number of games used for training.
-  epsilon: float (in [0,1])
-    Fraction of greedy decisions during training of the 2 RL Agents.
-  gamma: float (in [0,1])
-    Factor of significance of first actions over last ones for the 
-    2 RL Agents.
-  load_model: string
-    CSV filename in which is stored the learned Q-function of an 
-    agent. If load_model = 'model', the function loads the model 
-    './Models/model.csv'. If load_model is not None, the previous 
-    parameters epsilon and gamma are used for a second training.
-  filename: string
-    Name of the CSV file that will store the learned Q-function 
-    of one of the agents. The path to CSV file is 
-    then ./Models/filename.csv. The counter of state-action
-    pairs is also stored at ./Models/data/count_filename.csv for
-    future training.
-  random_opponent: boolean
-    If set to true, the function trains 1 RL Agent by making it 
-    play against a Random Agent. Otherwise, the RL agent is
-    trained by playing against another version of itself.
-  n_games_test: int
-    Number of games one of the RL Agent plays against a Random Agent
-    for testing. If set to 0, the RL Agents will not be tested by a 
-    Random Agent. 
-  freq_test: int
-    Number of epochs after which one of the RL Agents plays n_games_test
-    games against a Random Agent. If set to 1000, each 1000 epochs of
-    training, one of the RL Agents is tested against a Random Agent.
-    If set to 0, test occurs at the last epoch of training only.
-    If set to -1, none of the agents is tested during training.
-  n_skip_games: int 
-    Number of epochs after which the user can choose to play 
-    against one of the learning agents. If set to 1000, 
-    each 1000 games, the user can choose to play against 
-    one agent. If set to 0, the user can choose to play against one 
-    agent at the last epoch only. If set to -1, no choice is offered 
-    and the user cannot test any agent.
-  verbose: boolean
-    If set to True, each game action during training has a 
-    written explanation.
+    Parameters
+    ----------
+    n_epochs: int
+        Number of games used for training.
+    epsilon: float (in [0,1])
+        Fraction of greedy decisions during training of the 2 RL Agents.
+    gamma: float (in [0,1])
+        Factor of significance of first actions over last ones for the 
+        2 RL Agents.
+    load_model: string
+        CSV filename in which is stored the learned Q-function of an 
+        agent. If load_model = 'model', the function loads the model 
+        './Models/model.csv'. If load_model is not None, the previous 
+        parameters epsilon and gamma are used for a second training.
+    filename: string
+        Name of the CSV file that will store the learned Q-function 
+        of one of the agents. The path to CSV file is 
+        then ./Models/filename.csv. The counter of state-action
+        pairs is also stored at ./Models/data/count_filename.csv for
+        future training.
+    random_opponent: boolean
+        If set to true, the function trains 1 RL Agent by making it 
+        play against a Random Agent. Otherwise, the RL agent is
+        trained by playing against another version of itself.
+    n_games_test: int
+        Number of games one of the RL Agent plays against a Random Agent
+        for testing. If set to 0, the RL Agents will not be tested by a 
+        Random Agent. 
+    freq_test: int
+        Number of epochs after which one of the RL Agents plays n_games_test
+        games against a Random Agent. If set to 1000, each 1000 epochs of
+        training, one of the RL Agents is tested against a Random Agent.
+        If set to 0, test occurs at the last epoch of training only.
+        If set to -1, none of the agents is tested during training.
+    n_skip_games: int 
+        Number of epochs after which the user can choose to play 
+        against one of the learning agents. If set to 1000, 
+        each 1000 games, the user can choose to play against 
+        one agent. If set to 0, the user can choose to play against one 
+        agent at the last epoch only. If set to -1, no choice is offered 
+        and the user cannot test any agent.
+    verbose: boolean
+        If set to True, each game action during training has a 
+        written explanation.
 
-  Return
-  ------
-  learning_results: list
-    Only significant with n_games_test > 0 (otherwise, empty list 
-    by default). List of each n_epochs // freq_test epoch test results 
-    against a Random Agent. Each test result is a list: 
-    [current epoch, score of RL Agent, number of finished games, 
-    n_games test].
-  """
+    Return
+    ------
+    learning_results: list
+        Only significant with n_games_test > 0 (otherwise, empty list 
+        by default). List of each n_epochs // freq_test epoch test results 
+        against a Random Agent. Each test result is a list: 
+        [current epoch, score of RL Agent, number of finished games, 
+        n_games test].
+    """
 
     # Learning agent
     agent1 = RLAgent(epsilon, gamma)
