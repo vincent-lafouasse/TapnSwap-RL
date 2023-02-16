@@ -20,9 +20,9 @@ def main():
 
 def game_manager():
     """
-  Game manager, used for navigation among different choices 
-  offered to user.
-  """
+    Game manager, used for navigation among different choices 
+    offered to user.
+    """
 
     # Options
     command = options("PLAY", "RULES", "Tap 1 to play or 2 to read the rules")
@@ -107,49 +107,25 @@ def game_manager():
                         game_manager()
 
 
-def clear_screen():
-    """ 
-  Clear console screen on either windows, mac or linux.
-  """
-
-    # for windows
-    if os.name == "nt":
-        _ = os.system("cls")
-    # for mac and linux(here, os.name is 'posix')
-    else:
-        _ = os.system("clear")
-
-
-def header_screen():
-    """
-  Print the header's game.
-  """
-
-    clear_screen()
-    print("---------------------------------------")
-    print(str("TAP 'N SWAP").center(42))
-    print("---------------------------------------\n\n")
-
-
 def options(option1, option2, choice_sent, comeback=False):
     """
-  Display a menu with 2 options, along with a sentence explaining
-  what are the choices.
+    Display a menu with 2 options, along with a sentence explaining
+    what are the choices.
 
-  Parameters
-  ----------
-  option1, option2: strings
+    Parameters
+    ----------
+    option1, option2: strings
     Names of options.
-  choice_sent: string
+    choice_sent: string
     Sentence explaining to user the possible choices.
-  comeback: boolean
+    comeback: boolean
     If set to True, add a 3rd option to go back for instance.
 
-  Return
-  ------
-  choice: int (1, 2 or 0 if comeback = True)
+    Return
+    ------
+    choice: int (1, 2 or 0 if comeback = True)
     Choice of user.
-  """
+    """
 
     header_screen()
 
@@ -201,19 +177,19 @@ def display_endgame(scores, name1, name2):
 
 def input_names(n_players):
     """
-  Asks user the names of players.
+    Asks user the names of players.
 
-  Parameter
-  ---------
-  n_players: int (1 or 2)
-    Number of human players.
+    Parameter
+    ---------
+    n_players: int (1 or 2)
+        Number of human players.
 
-  Return
-  ------
-  player or (player1, player2): strings
-    Names of players given by user. Return player if n_players = 1.
-    Return player1, player2 otherwise.
-  """
+    Return
+    ------
+    player or (player1, player2): strings
+        Names of players given by user. Return player if n_players = 1.
+        Return player1, player2 otherwise.
+    """
 
     header_screen()
     assert n_players in [1, 2], "The number of names must be 1 or 2."
@@ -240,10 +216,34 @@ def input_names(n_players):
         return player
 
 
+def clear_screen():
+    """ 
+    Clear console screen on either windows, mac or linux.
+    """
+
+    # for windows
+    if os.name == "nt":
+        _ = os.system("cls")
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = os.system("clear")
+
+
+def header_screen():
+    """
+    Print the header's game.
+    """
+
+    clear_screen()
+    print("---------------------------------------")
+    print(str("TAP 'N SWAP").center(42))
+    print("---------------------------------------\n\n")
+
+
 def print_rules():
     """
-  Display the rules of TapnSwap game on screen.
-  """
+    Display the rules of TapnSwap game on screen.
+    """
 
     header_screen()
 
