@@ -135,37 +135,6 @@ def get_user_input_between(choices):
     return choice
 
 
-def display_endgame(scores, name1, name2) -> bool:
-    """
-    Print scores at the end of a game and asks user whether to start again.
-
-    Parameters
-    ----------
-    scores: list of 2 int
-        List containing scores of both players.
-    name1, name2: str
-        Names of players.
-
-    Return
-    ------
-    bool
-        True to play again, False otherwise
-    """
-
-    # Print scores
-    print("Current scores:\n")
-    print(name1 + ": %i" % (scores[0]))
-    print(name2 + ": %i" % (scores[1]))
-    print("----------------------------")
-
-    # Continue or go back
-    print("Another game ? (1 : Yes  |   2 : No)\n")
-    restart = tap_valid_digits([1, 2])
-    restart = int(restart)
-    restart = bool(2 - restart)
-    return restart
-
-
 def input_names(n_players):
     """
     Ask user the names of players.
@@ -205,6 +174,37 @@ def input_names(n_players):
         player = input("Name of player ? \n")
         print()
         return player
+
+
+def display_endgame(scores, name1, name2) -> bool:
+    """
+    Print scores at the end of a game and asks user whether to start again.
+
+    Parameters
+    ----------
+    scores: list of 2 int
+        List containing scores of both players.
+    name1, name2: str
+        Names of players.
+
+    Return
+    ------
+    bool
+        True to play again, False otherwise
+    """
+
+    # Print scores
+    print("Current scores:\n")
+    print(name1 + ": %i" % (scores[0]))
+    print(name2 + ": %i" % (scores[1]))
+    print("----------------------------")
+
+    # Continue or go back
+    print("Another game ? (1 : Yes  |   2 : No)\n")
+    restart = tap_valid_digits([1, 2])
+    restart = int(restart)
+    restart = bool(2 - restart)
+    return restart
 
 
 def new_frame():
