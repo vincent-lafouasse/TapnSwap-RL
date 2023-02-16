@@ -39,7 +39,9 @@ def game_manager():
     # Game page
     if int(command) == 1:
         # Options
-        players = options("PLAYER", "PLAYERS", "How many players ?", comeback=True)
+        players = options(
+            "PLAYER", "PLAYERS", "How many players ?", comeback=True
+        )
 
         # Go back
         if int(players) == 0:
@@ -96,7 +98,9 @@ def game_manager():
             tapnswap = TapnSwap()
             over = False
             while not over:
-                game_over, winner = game_1vsAgent(tapnswap, player, agent, greedy=False)
+                game_over, winner = game_1vsAgent(
+                    tapnswap, player, agent, greedy=False
+                )
                 scores[winner] += 1
                 if game_over:
                     # Display scores

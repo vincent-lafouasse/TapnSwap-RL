@@ -106,8 +106,12 @@ class RLAgent(Agent):
         """
 
         # First build list of states for 1 pair of hands
-        list_states_pair0_diff = [[i, j] for i in range(5) for j in range(5) if i != j]
-        list_states_pair0_eq = [[i, j] for i in range(5) for j in range(5) if (i == j)]
+        list_states_pair0_diff = [
+            [i, j] for i in range(5) for j in range(5) if i != j
+        ]
+        list_states_pair0_eq = [
+            [i, j] for i in range(5) for j in range(5) if (i == j)
+        ]
         list_states_pair0 = list_states_pair0_diff + list_states_pair0_eq
 
         # Then build list of states for 2 pairs
@@ -129,8 +133,12 @@ class RLAgent(Agent):
         """
 
         # Build list of all actions
-        list_actions_tap = [tuple([0, i, j]) for i in range(2) for j in range(2)]
-        list_actions_swap = [tuple([1, i, j]) for i in range(2) for j in range(1, 3)]
+        list_actions_tap = [
+            tuple([0, i, j]) for i in range(2) for j in range(2)
+        ]
+        list_actions_swap = [
+            tuple([1, i, j]) for i in range(2) for j in range(1, 3)
+        ]
         list_actions = list_actions_tap + list_actions_swap
 
         # Build dictionary
@@ -187,8 +195,12 @@ class RLAgent(Agent):
         ]
         assert (
             len(problem_actions) == 0
-        ), "The actions {} are not in dictionary of actions.".format(problem_actions)
-        return [self.action_coder[raw_action_t] for raw_action_t in raw_actions_t]
+        ), "The actions {} are not in dictionary of actions.".format(
+            problem_actions
+        )
+        return [
+            self.action_coder[raw_action_t] for raw_action_t in raw_actions_t
+        ]
 
     def decode_action(self, action):
         """
@@ -271,7 +283,9 @@ class RLAgent(Agent):
         # Exploration
         np.random.seed()
         if np.random.random() <= epsilon:
-            assert greedy == True, "Agent is epsilon greedy while it should not !"
+            assert (
+                greedy == True
+            ), "Agent is epsilon greedy while it should not !"
             action = self.random_action(actions)
 
         # Exploitation
@@ -308,7 +322,9 @@ class RLAgent(Agent):
 
         # Compute Temporal Difference (TD)
         delta_t = (
-            reward + self.gamma * max(self.Q[next_state, :]) - self.Q[state, action]
+            reward
+            + self.gamma * max(self.Q[next_state, :])
+            - self.Q[state, action]
         )
         # Update learning rate
         self.count_state_action[state, action] += 1

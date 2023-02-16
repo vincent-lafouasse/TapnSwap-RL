@@ -31,7 +31,11 @@ class Optimizer:
     """
 
     def __init__(
-        self, epsilon_values, random_training=True, self_training=True, change_opp=True
+        self,
+        epsilon_values,
+        random_training=True,
+        self_training=True,
+        change_opp=True,
     ):
         """
         Specifies which epsilon values and which kind of opponents
@@ -66,7 +70,9 @@ class Optimizer:
         # Base name to store results of various tournaments
         self.tournament_name = "tournament0"
 
-    def grid_search(self, n_epochs, n_games_test=100, freq_test=0, retrain=False):
+    def grid_search(
+        self, n_epochs, n_games_test=100, freq_test=0, retrain=False
+    ):
         """
         Compute the fraction of an agent's wins over a given number of 
         games against a Random Agent. This fraction is computed as a
@@ -139,7 +145,9 @@ class Optimizer:
         for random_opponent in random_choices:
             # Effective opponent
             random_opp = random_opponent
-            opp = "Random" * int(random_opponent) + "Self" * (1 - int(random_opponent))
+            opp = "Random" * int(random_opponent) + "Self" * (
+                1 - int(random_opponent)
+            )
 
             for invert_opp in invert_choices:
                 new_opp = ""
@@ -217,10 +225,14 @@ class Optimizer:
                                     for line in file_1:
                                         if "random" in line:
                                             line = line[:-1] + str(
-                                                " then " + str(random_opp) + "\n"
+                                                " then "
+                                                + str(random_opp)
+                                                + "\n"
                                             )
                                         file_2.write(line)
-                                    file_2.write("------------------------------\n")
+                                    file_2.write(
+                                        "------------------------------\n"
+                                    )
 
                             output_path = output_path2
                             model_filename = model_filename + new_opp
@@ -377,7 +389,8 @@ class Optimizer:
                 os.remove("Models/" + old_model + ".csv")
                 os.remove("Models/data/count_" + old_model + ".csv")
                 os.rename(
-                    r"Models/" + temp_model + ".csv", r"Models/" + old_model + ".csv"
+                    r"Models/" + temp_model + ".csv",
+                    r"Models/" + old_model + ".csv",
                 )
                 os.rename(
                     r"Models/data/count_" + temp_model + ".csv",
@@ -574,7 +587,9 @@ class Optimizer:
             f.write("Best players (from last to best):\n\n")
 
         # Import tournament CSV file
-        data = np.loadtxt("Models/results/" + input_filename + ".csv", delimiter=",")
+        data = np.loadtxt(
+            "Models/results/" + input_filename + ".csv", delimiter=","
+        )
         scores = data[3:, 3:]
         scores = np.array(scores, dtype="int")
 
@@ -624,7 +639,9 @@ class Optimizer:
                     + "\tepochs\n"
                 )
 
-    def retrain_best_models(self, n_epochs, common_train_time=False, min_frac=0.3):
+    def retrain_best_models(
+        self, n_epochs, common_train_time=False, min_frac=0.3
+    ):
         """
         Looks at previous tournament ranking TXT file (whose name is
         self.tournament_name) and selects some of the best current 
@@ -673,7 +690,9 @@ class Optimizer:
         # Get best models
         max_score = max([int(line[1]) for line in rankings])
         best_models = [
-            line for line in rankings if int(line[1]) >= float(max_score) * min_frac
+            line
+            for line in rankings
+            if int(line[1]) >= float(max_score) * min_frac
         ]
         best_models = [
             [float(model[2][10:-2]), model[3][11:-1], int(model[-2])]
@@ -697,7 +716,9 @@ class Optimizer:
             last_training_way = training_ways[-1]
             assert (
                 last_training_way == "Self" or last_training_way == "Random"
-            ), "Last method of training is not clear: {}".format(last_training_way)
+            ), "Last method of training is not clear: {}".format(
+                last_training_way
+            )
             prev_epochs = model[2]
             print("epsilon = ", epsilon)
             print(
@@ -787,7 +808,10 @@ if __name__ == "__main__":
     epsilon_values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
     optimizer = Optimizer(
-        epsilon_values, random_training=True, self_training=True, change_opp=True
+        epsilon_values,
+        random_training=True,
+        self_training=True,
+        change_opp=True,
     )
 
     n_epochs = 5000

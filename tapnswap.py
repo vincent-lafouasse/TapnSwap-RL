@@ -42,7 +42,10 @@ class TapnSwap:
             than pair0).
         """
 
-        if 0 < self.hands[pair0, hand0] < 5 and 0 < self.hands[1 - pair0, hand1] < 5:
+        if (
+            0 < self.hands[pair0, hand0] < 5
+            and 0 < self.hands[1 - pair0, hand1] < 5
+        ):
             self.hands[1 - pair0, hand1] += self.hands[pair0, hand0]
 
             # Kill hand with more than 4 fingers
@@ -71,7 +74,8 @@ class TapnSwap:
             0 < exchange_nbr < 5
             and self.hands[pair0, hand0] >= exchange_nbr
             and (
-                self.hands[pair0, hand0] - exchange_nbr != self.hands[pair0, 1 - hand0]
+                self.hands[pair0, hand0] - exchange_nbr
+                != self.hands[pair0, 1 - hand0]
             )
         ):
             self.hands[pair0, hand0] -= exchange_nbr
@@ -142,7 +146,9 @@ class TapnSwap:
 
             # Index of maximum hand of pair0
             hand_max = np.argmax(self.hands[pair0, :])
-            diff_hands = self.hands[pair0, hand_max] - self.hands[pair0, 1 - hand_max]
+            diff_hands = (
+                self.hands[pair0, hand_max] - self.hands[pair0, 1 - hand_max]
+            )
 
             if diff_hands == 0:  # (1|1, 2|2 or 3|3)
                 list_actions.append([1, hand_max, 1])
@@ -236,7 +242,9 @@ class TapnSwap:
         actions_h = self.list_actions_h(pair0)
         seen = set()
         return [
-            action for action in actions_h if not (action in seen or seen.add(action))
+            action
+            for action in actions_h
+            if not (action in seen or seen.add(action))
         ]
 
     def list_actions(self, pair0):
@@ -268,12 +276,16 @@ class TapnSwap:
         if len(actions_hu) != len(actions_h):
             for action in range(len(actions_hu)):
                 indices = [
-                    i for i, x in enumerate(actions_h) if x == actions_hu[action]
+                    i
+                    for i, x in enumerate(actions_h)
+                    if x == actions_hu[action]
                 ]
                 if len(indices) > 1:
                     indices_to_del += indices[1:]
         actions = [
-            action for idx, action in enumerate(actions) if idx not in indices_to_del
+            action
+            for idx, action in enumerate(actions)
+            if idx not in indices_to_del
         ]
 
         return actions

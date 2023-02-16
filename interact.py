@@ -200,7 +200,10 @@ def game_1vs1(tapnswap, player1, player2):
     game_over = False
 
     # Ask for starting player
-    print("Which player start first ? (tap 1 for %s or 2 for %s) " % (player1, player2))
+    print(
+        "Which player start first ? (tap 1 for %s or 2 for %s) "
+        % (player1, player2)
+    )
     player_idx = tap_valid_digits([1, 2])
     player_idx = int(player_idx)
     player_idx -= 1

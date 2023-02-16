@@ -163,7 +163,10 @@ def game_2Agents(
             # Train waiting agent (response of the environment)
             if count_rounds:
                 # New state in other's agent point of view
-                inv_next_state = [next_hands[1 - player_idx], next_hands[player_idx]]
+                inv_next_state = [
+                    next_hands[1 - player_idx],
+                    next_hands[player_idx],
+                ]
                 # Each waiting agent receives the transition with the
                 # response of the environment for the new state
                 agents[1 - player_idx].update_Q(
@@ -188,7 +191,11 @@ def game_2Agents(
     if bool(n_games_test):
         random_agent = RandomAgent()
         test_results = compare_agents(
-            agent1, random_agent, n_games=n_games_test, time_limit=None, verbose=False
+            agent1,
+            random_agent,
+            n_games=n_games_test,
+            time_limit=None,
+            verbose=False,
         )
 
     return game_over, winner, test_results
@@ -444,5 +451,7 @@ if __name__ == "__main__":
     agent1.load_model("greedy0_2_vsRandomvsSelf")
     agent2 = RLAgent()
     agent2.load_model("greedy0_6_vsSelf_test")
-    results = compare_agents(agent1, agent2, n_games=10, time_limit=None, verbose=False)
+    results = compare_agents(
+        agent1, agent2, n_games=10, time_limit=None, verbose=False
+    )
     print(results)
