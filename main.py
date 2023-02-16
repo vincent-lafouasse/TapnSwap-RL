@@ -34,92 +34,92 @@ def game_manager() -> None:
         "Enter Play to start playing or Rules to read the rules.",
     )
 
-    # Game page
-    if command == "PLAY":
-        # Options
+    while command == "RULES":
+        print_rules()
+        print("Enter anything to go back to title.")
+        input()
         new_frame()
-        game_mode = pick_option(
-            ["Solo", "Versus", "Back"],
-            "Do you want to play against the computer or against a friend ? Or do you want to go back to title",
+        command = pick_option(
+            ["PLAY", "RULES"],
+            "Enter Play to start playing or Rules to read the rules.",
+        )
+
+    new_frame()
+    game_mode = pick_option(
+        ["Solo", "Versus", "Back"],
+        "Do you want to play against the computer or against a friend ? "
+        + "Or do you want to go back to title",
+    )
+
+    # Go back
+    if game_mode == "BACK":
+        game_manager()
+
+    # 2 players
+    if game_mode == "VERSUS":
+
+        # Ask players' name
+        player1, player2 = input_names(n_players=2)
+
+        # Init scores
+        scores = [0, 0]
+
+        # Games
+        tapnswap = TapnSwap()
+        over = False
+        while not over:
+            game_over, winner = game_1vs1(tapnswap, player1, player2)
+            scores[winner] += 1
+            if game_over:
+                # Display scores
+                restart = display_endgame(scores, player1, player2)
+                # Go back
+                if not restart:
+                    over = True
+                    game_manager()
+
+    # 1 player
+    if game_mode == "SOLO":
+        new_frame()
+        difficulty_setting = pick_option(
+            ["Easy", "Hard", "Back"],
+            "Choose the difficulty setting, "
+            + "or enter Back to go back to title",
         )
 
         # Go back
-        if game_mode == "BACK":
+        if difficulty_setting == "BACK":
             game_manager()
 
-        # 2 players
-        if game_mode == "VERSUS":
+        # Define agent
+        if difficulty_setting == "EASY":
+            agent = RandomAgent()
+        else:
+            # Load agent
+            agent = RLAgent()
+            agent.load_model("greedy0_2_vsRandomvsSelf")
 
-            # Ask players' name
-            player1, player2 = input_names(n_players=2)
+        # Ask player's name
+        player = input_names(n_players=1)
 
-            # Init scores
-            scores = [0, 0]
+        # Init scores
+        scores = [0, 0]
 
-            # Games
-            tapnswap = TapnSwap()
-            over = False
-            while not over:
-                game_over, winner = game_1vs1(tapnswap, player1, player2)
-                scores[winner] += 1
-                if game_over:
-                    # Display scores
-                    restart = display_endgame(scores, player1, player2)
-                    # Go back
-                    if not restart:
-                        over = True
-                        game_manager()
-
-        # 1 player
-        if game_mode == "SOLO":
-            new_frame()
-            difficulty_setting = pick_option(
-                ["Easy", "Hard", "Back"],
-                "Choose the difficulty setting, or enter Back to go back to title",
+        # Games
+        tapnswap = TapnSwap()
+        over = False
+        while not over:
+            game_over, winner = game_1vsAgent(
+                tapnswap, player, agent, greedy=False
             )
-
-            # Go back
-            if difficulty_setting == "BACK":
-                game_manager()
-
-            # Define agent
-            if difficulty_setting == "EASY":
-                agent = RandomAgent()
-            else:
-                # Load agent
-                agent = RLAgent()
-                agent.load_model("greedy0_2_vsRandomvsSelf")
-
-            # Ask player's name
-            player = input_names(n_players=1)
-
-            # Init scores
-            scores = [0, 0]
-
-            # Games
-            tapnswap = TapnSwap()
-            over = False
-            while not over:
-                game_over, winner = game_1vsAgent(
-                    tapnswap, player, agent, greedy=False
-                )
-                scores[winner] += 1
-                if game_over:
-                    # Display scores
-                    restart = display_endgame(scores, player, "Computer")
-                    # Go back
-                    if not restart:
-                        over = True
-                        game_manager()
-
-    # Rules page
-    if command == "RULES":
-        print_rules()
-        # Go back
-        print("Tap 1 to come back to the main menu\n")
-        comeback = tap_valid_digits([1])
-        if int(comeback):
-            game_manager()
+            scores[winner] += 1
+            if game_over:
+                # Display scores
+                restart = display_endgame(scores, player, "Computer")
+                # Go back
+                if not restart:
+                    over = True
+                    game_manager()
 
 
 def pick_option(options, prompt):
