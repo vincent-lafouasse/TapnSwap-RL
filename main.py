@@ -14,6 +14,99 @@ from agent import Agent, RandomAgent, RLAgent
 import os
 
 
+def main():
+    game_manager()
+
+
+def game_manager():
+    """
+  Game manager, used for navigation among different choices 
+  offered to user.
+  """
+
+    # Options
+    command = options("PLAY", "RULES", "Tap 1 to play or 2 to read the rules")
+
+    # Rules page
+    if int(command) == 2:
+        print_rules()
+        # Go back
+        print("Tap 1 to come back to the main menu\n")
+        comeback = tap_valid_digits([1])
+        if int(comeback):
+            game_manager()
+
+    # Game page
+    if int(command) == 1:
+        # Options
+        players = options("PLAYER", "PLAYERS", "How many players ?", comeback=True)
+
+        # Go back
+        if int(players) == 0:
+            game_manager()
+
+        # 2 players
+        if int(players) == 2:
+
+            # Ask players' name
+            player1, player2 = input_names(n_players=2)
+
+            # Init scores
+            scores = [0, 0]
+
+            # Games
+            tapnswap = TapnSwap()
+            over = False
+            while not over:
+                game_over, winner = game_1vs1(tapnswap, player1, player2)
+                scores[winner] += 1
+                if game_over:
+                    # Display scores
+                    restart = display_endgame(scores, player1, player2)
+                    # Go back
+                    if not restart:
+                        over = True
+                        game_manager()
+
+        # 1 player
+        if int(players) == 1:
+
+            # Options
+            level = options("EASY", "DIFFICULT", "Which level ?", comeback=True)
+
+            # Go back
+            if int(level) == 0:
+                game_manager()
+
+            # Define agent
+            elif int(level) == 1:
+                agent = RandomAgent()  # easy
+            else:
+                # Load agent
+                agent = RLAgent()
+                agent.load_model("greedy0_2_vsRandomvsSelf")  # difficult
+
+            # Ask player's name
+            player = input_names(n_players=1)
+
+            # Init scores
+            scores = [0, 0]
+
+            # Games
+            tapnswap = TapnSwap()
+            over = False
+            while not over:
+                game_over, winner = game_1vsAgent(tapnswap, player, agent, greedy=False)
+                scores[winner] += 1
+                if game_over:
+                    # Display scores
+                    restart = display_endgame(scores, player, "Computer")
+                    # Go back
+                    if not restart:
+                        over = True
+                        game_manager()
+
+
 def clear_screen():
     """ 
   Clear console screen on either windows, mac or linux.
@@ -72,6 +165,79 @@ def options(option1, option2, choice_sent, comeback=False):
     digits = int(comeback) * [0] + [1, 2]
     choice = tap_valid_digits(digits)
     return choice
+
+
+def display_endgame(scores, name1, name2):
+    """
+  Print scores at the end of a game and asks user whether to start 
+  again.
+
+  Parameters
+  ----------
+  scores: list of 2 int
+    List containing scores of both players.
+  name1, name2: strings
+    Names of players.
+
+  Return
+  ------
+  restart: boolean
+    Answer of user whether to start again.
+  """
+
+    # Print scores
+    print("Current scores:\n")
+    print(name1 + ": %i" % (scores[0]))
+    print(name2 + ": %i" % (scores[1]))
+    print("----------------------------")
+
+    # Continue or go back
+    print("Another game ? (1 : Yes  |   2 : No)\n")
+    restart = tap_valid_digits([1, 2])
+    restart = int(restart)
+    restart = bool(2 - restart)
+    return restart
+
+
+def input_names(n_players):
+    """
+  Asks user the names of players.
+
+  Parameter
+  ---------
+  n_players: int (1 or 2)
+    Number of human players.
+
+  Return
+  ------
+  player or (player1, player2): strings
+    Names of players given by user. Return player if n_players = 1.
+    Return player1, player2 otherwise.
+  """
+
+    header_screen()
+    assert n_players in [1, 2], "The number of names must be 1 or 2."
+
+    # 2 human players
+    if n_players == 2:
+        player1 = input("Name of 1st player ? \n")
+        print()
+        print("Name of 2nd player ? ")
+        not_valid = True
+        while not_valid:
+            player2 = input()
+            if player2 == player1:
+                print("Please choose a different name than 1st player")
+            else:
+                not_valid = False
+                print()
+        return player1, player2
+
+    # 1 human player
+    else:
+        player = input("Name of player ? \n")
+        print()
+        return player
 
 
 def print_rules():
@@ -349,168 +515,5 @@ def print_rules():
     print("That's all for the rules, thanks !\n")
 
 
-def input_names(n_players):
-    """
-  Asks user the names of players.
-
-  Parameter
-  ---------
-  n_players: int (1 or 2)
-    Number of human players.
-
-  Return
-  ------
-  player or (player1, player2): strings
-    Names of players given by user. Return player if n_players = 1.
-    Return player1, player2 otherwise.
-  """
-
-    header_screen()
-    assert n_players in [1, 2], "The number of names must be 1 or 2."
-
-    # 2 human players
-    if n_players == 2:
-        player1 = input("Name of 1st player ? \n")
-        print()
-        print("Name of 2nd player ? ")
-        not_valid = True
-        while not_valid:
-            player2 = input()
-            if player2 == player1:
-                print("Please choose a different name than 1st player")
-            else:
-                not_valid = False
-                print()
-        return player1, player2
-
-    # 1 human player
-    else:
-        player = input("Name of player ? \n")
-        print()
-        return player
-
-
-def display_endgame(scores, name1, name2):
-    """
-  Print scores at the end of a game and asks user whether to start 
-  again.
-
-  Parameters
-  ----------
-  scores: list of 2 int
-    List containing scores of both players.
-  name1, name2: strings
-    Names of players.
-
-  Return
-  ------
-  restart: boolean
-    Answer of user whether to start again.
-  """
-
-    # Print scores
-    print("Current scores:\n")
-    print(name1 + ": %i" % (scores[0]))
-    print(name2 + ": %i" % (scores[1]))
-    print("----------------------------")
-
-    # Continue or go back
-    print("Another game ? (1 : Yes  |   2 : No)\n")
-    restart = tap_valid_digits([1, 2])
-    restart = int(restart)
-    restart = bool(2 - restart)
-    return restart
-
-
-def game_mngr():
-    """
-  Game manager, used for navigation among different choices 
-  offered to user.
-  """
-
-    # Options
-    command = options("PLAY", "RULES", "Tap 1 to play or 2 to read the rules")
-
-    # Rules page
-    if int(command) == 2:
-        print_rules()
-        # Go back
-        print("Tap 1 to come back to the main menu\n")
-        comeback = tap_valid_digits([1])
-        if int(comeback):
-            game_mngr()
-
-    # Game page
-    if int(command) == 1:
-        # Options
-        players = options("PLAYER", "PLAYERS", "How many players ?", comeback=True)
-
-        # Go back
-        if int(players) == 0:
-            game_mngr()
-
-        # 2 players
-        if int(players) == 2:
-
-            # Ask players' name
-            player1, player2 = input_names(n_players=2)
-
-            # Init scores
-            scores = [0, 0]
-
-            # Games
-            tapnswap = TapnSwap()
-            over = False
-            while not over:
-                game_over, winner = game_1vs1(tapnswap, player1, player2)
-                scores[winner] += 1
-                if game_over:
-                    # Display scores
-                    restart = display_endgame(scores, player1, player2)
-                    # Go back
-                    if not restart:
-                        over = True
-                        game_mngr()
-
-        # 1 player
-        if int(players) == 1:
-
-            # Options
-            level = options("EASY", "DIFFICULT", "Which level ?", comeback=True)
-
-            # Go back
-            if int(level) == 0:
-                game_mngr()
-
-            # Define agent
-            elif int(level) == 1:
-                agent = RandomAgent()  # easy
-            else:
-                # Load agent
-                agent = RLAgent()
-                agent.load_model("greedy0_2_vsRandomvsSelf")  # difficult
-
-            # Ask player's name
-            player = input_names(n_players=1)
-
-            # Init scores
-            scores = [0, 0]
-
-            # Games
-            tapnswap = TapnSwap()
-            over = False
-            while not over:
-                game_over, winner = game_1vsAgent(tapnswap, player, agent, greedy=False)
-                scores[winner] += 1
-                if game_over:
-                    # Display scores
-                    restart = display_endgame(scores, player, "Computer")
-                    # Go back
-                    if not restart:
-                        over = True
-                        game_mngr()
-
-
 if __name__ == "__main__":
-
-    game_mngr()
+    main()
