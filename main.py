@@ -18,10 +18,9 @@ def main():
     game_manager()
 
 
-def game_manager():
+def game_manager() -> None:
     """
-    Game manager, used for navigation among different choices 
-    offered to user.
+    Game manager, used for navigation among different choices offered to user.
     """
 
     # Options
@@ -111,24 +110,26 @@ def game_manager():
             game_manager()
 
 
-def options(option1: str, option2: str, choice_sent: str, comeback=False):
+def options(
+    option1: str, option2: str, choice_sent: str, comeback=False
+) -> int:
     """
-    Display a menu with 2 options, along with a sentence explaining
-    what are the choices.
+    Display a menu with 2 options, along with a sentence explaining what are
+    the choices.
 
     Parameters
     ----------
-    option1, option2: strings
-    Names of options.
-    choice_sent: string
-    Sentence explaining to user the possible choices.
-    comeback: boolean
-    If set to True, add a 3rd option to go back for instance.
+    option1, option2: str
+        Names of options.
+    choice_sent: str
+        Sentence explaining to user the possible choices.
+    comeback: bool
+        If set to True, add a 3rd option to go back for instance.
 
-    Return
+    Returns
     ------
-    choice: int (1, 2 or 0 if comeback = True)
-    Choice of user.
+    int
+        1 if option1 is selected (resp. 2), 0 to go back
     """
 
     header_screen()
@@ -147,23 +148,22 @@ def options(option1: str, option2: str, choice_sent: str, comeback=False):
     return choice
 
 
-def display_endgame(scores, name1, name2):
+def display_endgame(scores, name1, name2) -> bool:
     """
-  Print scores at the end of a game and asks user whether to start 
-  again.
+    Print scores at the end of a game and asks user whether to start again.
 
-  Parameters
-  ----------
-  scores: list of 2 int
-    List containing scores of both players.
-  name1, name2: strings
-    Names of players.
+    Parameters
+    ----------
+    scores: list of 2 int
+        List containing scores of both players.
+    name1, name2: str
+        Names of players.
 
-  Return
-  ------
-  restart: boolean
-    Answer of user whether to start again.
-  """
+    Return
+    ------
+    bool
+        True to play again, False otherwise
+    """
 
     # Print scores
     print("Current scores:\n")
@@ -181,12 +181,12 @@ def display_endgame(scores, name1, name2):
 
 def input_names(n_players):
     """
-    Asks user the names of players.
+    Ask user the names of players.
 
     Parameter
     ---------
-    n_players: int (1 or 2)
-        Number of human players.
+    n_players: int
+        Number of human players, 1 or 2.
 
     Return
     ------
@@ -220,7 +220,7 @@ def input_names(n_players):
         return player
 
 
-def clear_screen():
+def clear_screen() -> None:
     """ 
     Clear console screen on either windows, mac or linux.
     """
@@ -233,9 +233,9 @@ def clear_screen():
         _ = os.system("clear")
 
 
-def header_screen():
+def header_screen() -> None:
     """
-    Print the header's game.
+    Print the game's header.
     """
 
     clear_screen()
@@ -244,7 +244,7 @@ def header_screen():
     print("---------------------------------------\n\n")
 
 
-def print_rules():
+def print_rules() -> None:
     """
     Display the rules of TapnSwap game on screen.
     """
