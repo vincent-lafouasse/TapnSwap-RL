@@ -122,44 +122,6 @@ def game_manager() -> None:
             game_manager()
 
 
-def options(
-    option1: str, option2: str, choice_sent: str, comeback=False
-) -> int:
-    """
-    Display a menu with 2 options, along with a sentence explaining what are
-    the choices.
-
-    Parameters
-    ----------
-    option1, option2: str
-        Names of options.
-    choice_sent: str
-        Sentence explaining to user the possible choices.
-    comeback: bool
-        If set to True, add a 3rd option to go back for instance.
-
-    Returns
-    ------
-    int
-        1 if option1 is selected (resp. 2), 0 to go back
-    """
-
-    header_screen()
-
-    # Print options
-    print(f"1 {option1}".center(CENTER_COLUMN))
-    print()
-    print(f"2 {option2}".center(CENTER_COLUMN))
-    print("\n\n")
-
-    # Ask user to choose
-    sent = choice_sent + int(comeback) * " (press 0 to go back)"
-    print(sent)
-    digits = int(comeback) * [0] + [1, 2]
-    choice = tap_valid_digits(digits)
-    return choice
-
-
 def pick_option(options, prompt):
     for option in options:
         print(option.center(CENTER_COLUMN) + "\n")
