@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+src_dir='src'
+main='main.py'
+
+python "${src_dir}"/"${main}"
