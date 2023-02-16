@@ -27,7 +27,6 @@ def game_manager() -> None:
     Game manager, used for navigation among different choices offered to user.
     """
 
-    # Options
     new_frame()
     command = pick_option(
         ["PLAY", "RULES"],
@@ -51,7 +50,6 @@ def game_manager() -> None:
         + "Or do you want to go back to title",
     )
 
-    # Go back
     if game_mode == "BACK":
         game_manager()
 
@@ -131,7 +129,7 @@ def pick_option(options, prompt):
 
 def get_user_input_between(choices):
     lowercase_choices = [item.lower() for item in choices]
-    choice = input()
+    choice = input(">>> ")
     while choice.lower() not in lowercase_choices:
         choice = input()
     return choice
