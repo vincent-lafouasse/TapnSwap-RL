@@ -27,15 +27,6 @@ def game_manager():
     # Options
     command = options("PLAY", "RULES", "Tap 1 to play or 2 to read the rules")
 
-    # Rules page
-    if int(command) == 2:
-        print_rules()
-        # Go back
-        print("Tap 1 to come back to the main menu\n")
-        comeback = tap_valid_digits([1])
-        if int(comeback):
-            game_manager()
-
     # Game page
     if int(command) == 1:
         # Options
@@ -109,6 +100,15 @@ def game_manager():
                     if not restart:
                         over = True
                         game_manager()
+
+    # Rules page
+    if int(command) == 2:
+        print_rules()
+        # Go back
+        print("Tap 1 to come back to the main menu\n")
+        comeback = tap_valid_digits([1])
+        if int(comeback):
+            game_manager()
 
 
 def options(option1: str, option2: str, choice_sent: str, comeback=False):
