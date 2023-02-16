@@ -28,24 +28,27 @@ def game_manager() -> None:
     """
 
     # Options
+    new_frame()
     command = pick_option(
         ["PLAY", "RULES"],
-        "Type Play to start playing or Rules to read the rules.",
+        "Enter Play to start playing or Rules to read the rules.",
     )
 
     # Game page
-    if command.lower() == "play":
+    if command == "PLAY":
         # Options
-        players = options(
-            "PLAYER", "PLAYERS", "How many players ?", comeback=True
+        new_frame()
+        game_mode = pick_option(
+            ["Solo", "Versus", "Back"],
+            "Do you want to play against the computer or against a friend ? Or do you want to go back to title",
         )
 
         # Go back
-        if int(players) == 0:
+        if game_mode == "BACK":
             game_manager()
 
         # 2 players
-        if int(players) == 2:
+        if game_mode == "VERSUS":
 
             # Ask players' name
             player1, player2 = input_names(n_players=2)
@@ -68,22 +71,24 @@ def game_manager() -> None:
                         game_manager()
 
         # 1 player
-        if int(players) == 1:
-
-            # Options
-            level = options("EASY", "DIFFICULT", "Which level ?", comeback=True)
+        if game_mode == "SOLO":
+            new_frame()
+            difficulty_setting = pick_option(
+                ["Easy", "Hard", "Back"],
+                "Choose the difficulty setting, or enter Back to go back to title",
+            )
 
             # Go back
-            if int(level) == 0:
+            if difficulty_setting == "BACK":
                 game_manager()
 
             # Define agent
-            elif int(level) == 1:
-                agent = RandomAgent()  # easy
+            if difficulty_setting == "EASY":
+                agent = RandomAgent()
             else:
                 # Load agent
                 agent = RLAgent()
-                agent.load_model("greedy0_2_vsRandomvsSelf")  # difficult
+                agent.load_model("greedy0_2_vsRandomvsSelf")
 
             # Ask player's name
             player = input_names(n_players=1)
@@ -108,7 +113,7 @@ def game_manager() -> None:
                         game_manager()
 
     # Rules page
-    if command.lower() == "rules":
+    if command == "RULES":
         print_rules()
         # Go back
         print("Tap 1 to come back to the main menu\n")
@@ -156,11 +161,10 @@ def options(
 
 
 def pick_option(options, prompt):
-    header_screen()
     for option in options:
         print(option.center(CENTER_COLUMN) + "\n")
     print("\n" + prompt)
-    return get_user_input_between(options)
+    return get_user_input_between(options).upper()
 
 
 def get_user_input_between(choices):
@@ -241,6 +245,11 @@ def input_names(n_players):
         player = input("Name of player ? \n")
         print()
         return player
+
+
+def new_frame():
+    clear_screen()
+    header_screen()
 
 
 def clear_screen() -> None:
