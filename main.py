@@ -14,10 +14,6 @@ from agent import Agent, RandomAgent, RLAgent
 import os
 
 
-LINE_LENGTH = 80
-CENTER_COLUMN = int(LINE_LENGTH / 2)
-
-
 def main():
     game_manager()
 
@@ -49,32 +45,6 @@ def game_manager() -> None:
         "Do you want to play against the computer or against a friend ? "
         + "Or do you want to go back to title",
     )
-
-    if game_mode == "BACK":
-        game_manager()
-
-    # 2 players
-    if game_mode == "VERSUS":
-
-        # Ask players' name
-        player1, player2 = input_names(n_players=2)
-
-        # Init scores
-        scores = [0, 0]
-
-        # Games
-        tapnswap = TapnSwap()
-        over = False
-        while not over:
-            game_over, winner = game_1vs1(tapnswap, player1, player2)
-            scores[winner] += 1
-            if game_over:
-                # Display scores
-                restart = display_endgame(scores, player1, player2)
-                # Go back
-                if not restart:
-                    over = True
-                    game_manager()
 
     # 1 player
     if game_mode == "SOLO":
@@ -118,6 +88,36 @@ def game_manager() -> None:
                 if not restart:
                     over = True
                     game_manager()
+
+    # 2 players
+    if game_mode == "VERSUS":
+
+        # Ask players' name
+        player1, player2 = input_names(n_players=2)
+
+        # Init scores
+        scores = [0, 0]
+
+        # Games
+        tapnswap = TapnSwap()
+        over = False
+        while not over:
+            game_over, winner = game_1vs1(tapnswap, player1, player2)
+            scores[winner] += 1
+            if game_over:
+                # Display scores
+                restart = display_endgame(scores, player1, player2)
+                # Go back
+                if not restart:
+                    over = True
+                    game_manager()
+
+    if game_mode == "BACK":
+        game_manager()
+
+
+LINE_LENGTH = 80
+CENTER_COLUMN = int(LINE_LENGTH / 2)
 
 
 def pick_option(options, prompt):
