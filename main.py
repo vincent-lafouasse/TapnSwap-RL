@@ -14,6 +14,10 @@ from agent import Agent, RandomAgent, RLAgent
 import os
 
 
+LINE_LENGTH = 80
+CENTER_COLUMN = int(LINE_LENGTH / 2)
+
+
 def main():
     game_manager()
 
@@ -24,10 +28,13 @@ def game_manager() -> None:
     """
 
     # Options
-    command = options("PLAY", "RULES", "Tap 1 to play or 2 to read the rules")
+    command = pick_option(
+        ["PLAY", "RULES"],
+        "Type Play to start playing or Rules to read the rules.",
+    )
 
     # Game page
-    if int(command) == 1:
+    if command.lower() == "play":
         # Options
         players = options(
             "PLAYER", "PLAYERS", "How many players ?", comeback=True
@@ -101,7 +108,7 @@ def game_manager() -> None:
                         game_manager()
 
     # Rules page
-    if int(command) == 2:
+    if command.lower() == "rules":
         print_rules()
         # Go back
         print("Tap 1 to come back to the main menu\n")
@@ -135,9 +142,9 @@ def options(
     header_screen()
 
     # Print options
-    print(f"1 {option1}".center(40))
+    print(f"1 {option1}".center(CENTER_COLUMN))
     print()
-    print(f"2 {option2}".center(40))
+    print(f"2 {option2}".center(CENTER_COLUMN))
     print("\n\n")
 
     # Ask user to choose
@@ -145,6 +152,22 @@ def options(
     print(sent)
     digits = int(comeback) * [0] + [1, 2]
     choice = tap_valid_digits(digits)
+    return choice
+
+
+def pick_option(options, prompt):
+    header_screen()
+    for option in options:
+        print(option.center(CENTER_COLUMN) + "\n")
+    print("\n" + prompt)
+    return get_user_input_between(options)
+
+
+def get_user_input_between(choices):
+    lowercase_choices = [item.lower() for item in choices]
+    choice = input()
+    while choice.lower() not in lowercase_choices:
+        choice = input()
     return choice
 
 
@@ -277,15 +300,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print(
@@ -327,15 +358,23 @@ def print_rules() -> None:
     print("Round of", names[1])
     print("----------------------------")
     print()
-    print(str(names[0]).center(40))
-    print("  |  ".center(40))
-    print(str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[1].center(40))
+    print(str(names[0]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[1].center(CENTER_COLUMN))
     print()
 
     print(
@@ -352,15 +391,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print(
@@ -381,15 +428,23 @@ def print_rules() -> None:
     print("Round of", names[1])
     print("----------------------------")
     print()
-    print(str(names[0]).center(40))
-    print("  |  ".center(40))
-    print(str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(5 * " " + 0 * "|" + "   |   " + 4 * "|" + 1 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[1].center(40))
+    print(str(names[0]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(5 * " " + 0 * "|" + "   |   " + 4 * "|" + 1 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[1].center(CENTER_COLUMN))
     print()
 
     print(
@@ -415,15 +470,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(2 * " " + 3 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print(
@@ -440,15 +503,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 2 * "|" + 3 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 4 * "|" + 1 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 2 * "|" + 3 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print(
@@ -481,15 +552,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 0 * "|" + 5 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 0 * "|" + 5 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print(
@@ -505,15 +584,23 @@ def print_rules() -> None:
     print("Round of", names[0])
     print("----------------------------")
     print()
-    print(str(names[1]).center(40))
-    print("  |  ".center(40))
-    print(str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print("L -------------------- R".center(40))
-    print("  |  ".center(40))
-    print(str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(40))
-    print("  |  ".center(40))
-    print(names[0].center(40))
+    print(str(names[1]).center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(3 * " " + 2 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print("L -------------------- R".center(CENTER_COLUMN))
+    print("  |  ".center(CENTER_COLUMN))
+    print(
+        str(4 * " " + 1 * "|" + "   |   " + 1 * "|" + 4 * " ").center(
+            CENTER_COLUMN
+        )
+    )
+    print("  |  ".center(CENTER_COLUMN))
+    print(names[0].center(CENTER_COLUMN))
     print()
 
     print("That's all for the rules, thanks !\n")
