@@ -24,10 +24,12 @@ def game_manager() -> None:
     """
 
     new_frame()
-    command = pick_option(
-        ["PLAY", "RULES"],
-        "Enter Play to start playing or Rules to read the rules.",
-    )
+    command_prompt = "Enter Play to start playing or Rules to read the rules.\n"
+    command_prompt += "Enter Quit to exit."
+    command = pick_option(["PLAY", "RULES", "QUIT"], command_prompt)
+
+    if command == "QUIT":
+        return None
 
     while command == "RULES":
         print_rules()
