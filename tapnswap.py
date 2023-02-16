@@ -5,11 +5,12 @@ players and their actions.
 """
 
 # Copyright (C) 2020, Jean-Rémy Conti, ENS Paris-Saclay (France).
-# All rights reserved. You should have received a copy of the GNU 
-# General Public License along with this program. 
+# All rights reserved. You should have received a copy of the GNU
+# General Public License along with this program.
 # If not, see <https://www.gnu.org/licenses/>.
 
 import numpy as np
+
 
 class TapnSwap:
     """
@@ -23,8 +24,7 @@ class TapnSwap:
         """
 
         # 2 pairs of hands (1 finger on each hand)
-        self.hands = np.array([[1, 1], [1, 1]]) 
-
+        self.hands = np.array([[1, 1], [1, 1]])
 
     def tap(self, pair0, hand0, hand1):
         """
@@ -42,16 +42,15 @@ class TapnSwap:
             than pair0).
         """
 
-        if (0 < self.hands[pair0, hand0] < 5
-            and 0 < self.hands[1 - pair0, hand1] < 5):
+        if 0 < self.hands[pair0, hand0] < 5 and 0 < self.hands[1 - pair0, hand1] < 5:
             self.hands[1 - pair0, hand1] += self.hands[pair0, hand0]
 
             # Kill hand with more than 4 fingers
             if self.hands[1 - pair0, hand1] >= 5:
-              self.hands[1 - pair0, hand1] = 0
-        else: raise ValueError
+                self.hands[1 - pair0, hand1] = 0
+        else:
+            raise ValueError
 
-    
     def swap(self, pair0, hand0, exchange_nbr):
         """
         Swap exchange_nbr from hand0 to other hand (same pair pair0).
@@ -68,22 +67,24 @@ class TapnSwap:
             to give to hand1 of pair0.
         """
 
-        if ( 0 < exchange_nbr < 5
+        if (
+            0 < exchange_nbr < 5
             and self.hands[pair0, hand0] >= exchange_nbr
-            and (self.hands[pair0, hand0] - exchange_nbr != 
-                  self.hands[pair0, 1 - hand0])
-            ):
-          self.hands[pair0, hand0] -= exchange_nbr
-          self.hands[pair0, 1 - hand0] += exchange_nbr
+            and (
+                self.hands[pair0, hand0] - exchange_nbr != self.hands[pair0, 1 - hand0]
+            )
+        ):
+            self.hands[pair0, hand0] -= exchange_nbr
+            self.hands[pair0, 1 - hand0] += exchange_nbr
 
-          # Kill hand with more than 4 fingers
-          if self.hands[pair0, 1 - hand0] >= 5:
-            self.hands[pair0, 1 - hand0] = 0
-        else: raise ValueError
-
+            # Kill hand with more than 4 fingers
+            if self.hands[pair0, 1 - hand0] >= 5:
+                self.hands[pair0, 1 - hand0] = 0
+        else:
+            raise ValueError
 
     def list_actions_tap(self, pair0):
-      """
+        """
       Gives the list of possible tap actions for pair0.
 
       Parameter
@@ -104,17 +105,16 @@ class TapnSwap:
             tap action of pair0.
       """
 
-      list_actions = []
-      for i in range(2):
-        if 0 < self.hands[pair0, i] < 5:
-          for j in range(2):
-            if 0 < self.hands[1 - pair0, j] < 5:
-              list_actions.append([0, i, j])
-      return list_actions
+        list_actions = []
+        for i in range(2):
+            if 0 < self.hands[pair0, i] < 5:
+                for j in range(2):
+                    if 0 < self.hands[1 - pair0, j] < 5:
+                        list_actions.append([0, i, j])
+        return list_actions
 
-    
     def list_actions_swap(self, pair0):
-      """
+        """
       Gives the list of possible swap actions for pair0.
 
       Parameter
@@ -135,40 +135,38 @@ class TapnSwap:
             Amount of such fingers.
       """
 
-      list_actions = []
-      sum_hands = self.hands[pair0, 0] + self.hands[pair0, 1]
+        list_actions = []
+        sum_hands = self.hands[pair0, 0] + self.hands[pair0, 1]
 
-      if 1 < sum_hands < 7: # Valid swap
+        if 1 < sum_hands < 7:  # Valid swap
 
-        # Index of maximum hand of pair0
-        hand_max = np.argmax( self.hands[pair0, :] )
-        diff_hands = (self.hands[pair0, hand_max] - 
-                      self.hands[pair0, 1 - hand_max])
-        
-        if diff_hands == 0: # (1|1, 2|2 or 3|3)
-          list_actions.append( [1, hand_max, 1])
-          if sum_hands == 4:
-            list_actions.append( [1, hand_max, 2] )
-        
-        elif diff_hands == 1: # (2|1 or 3|2)
-          list_actions.append( [1, 1 - hand_max, 1] )
-        
-        elif diff_hands == 2: # (2|0, 3|1 or 4|2)
-          list_actions.append( [1, hand_max, 1])
-          if sum_hands == 4:
-            list_actions.append( [1, 1 - hand_max, 1] )
-        
-        elif diff_hands == 3: # (3|0 or 4|1)
-          list_actions.append( [1, hand_max, 1] )
+            # Index of maximum hand of pair0
+            hand_max = np.argmax(self.hands[pair0, :])
+            diff_hands = self.hands[pair0, hand_max] - self.hands[pair0, 1 - hand_max]
 
-        elif diff_hands == 4: # (4|0)
-          list_actions.append( [1, hand_max, 1] )
-          list_actions.append( [1, hand_max, 2] )
-      return list_actions
+            if diff_hands == 0:  # (1|1, 2|2 or 3|3)
+                list_actions.append([1, hand_max, 1])
+                if sum_hands == 4:
+                    list_actions.append([1, hand_max, 2])
 
+            elif diff_hands == 1:  # (2|1 or 3|2)
+                list_actions.append([1, 1 - hand_max, 1])
+
+            elif diff_hands == 2:  # (2|0, 3|1 or 4|2)
+                list_actions.append([1, hand_max, 1])
+                if sum_hands == 4:
+                    list_actions.append([1, 1 - hand_max, 1])
+
+            elif diff_hands == 3:  # (3|0 or 4|1)
+                list_actions.append([1, hand_max, 1])
+
+            elif diff_hands == 4:  # (4|0)
+                list_actions.append([1, hand_max, 1])
+                list_actions.append([1, hand_max, 2])
+        return list_actions
 
     def list_actions_h(self, pair0):
-      """
+        """
       Gives the possible actions for pair0 in text format 
       (non uniques -> might observe repetitions). 
       
@@ -195,29 +193,31 @@ class TapnSwap:
             Amount of fingers found on hand[i] of pair0 after swap.
       """
 
-      actions = self.list_actions_tap(pair0) + self.list_actions_swap(pair0)
-      actions_h = []
+        actions = self.list_actions_tap(pair0) + self.list_actions_swap(pair0)
+        actions_h = []
 
-      for i in range(len(actions)):
-        new_action = ''
-        # Tap action
-        if actions[i][0] == 0:
-          new_action = 'Tap with %i on %i' % (
-          self.hands[pair0, actions[i][1]],
-          self.hands[1 - pair0, actions[i][2]])
-        # Swap action
-        else:
-          new_action = 'Swap %i-%i for %i-%i' % (
-              self.hands[pair0, 0], self.hands[pair0, 1],
-              self.hands[pair0, actions[i][1]] - actions[i][2],
-              self.hands[pair0, 1 - actions[i][1]] + actions[i][2])
-        actions_h.append(new_action)
-      
-      return actions_h
+        for i in range(len(actions)):
+            new_action = ""
+            # Tap action
+            if actions[i][0] == 0:
+                new_action = "Tap with %i on %i" % (
+                    self.hands[pair0, actions[i][1]],
+                    self.hands[1 - pair0, actions[i][2]],
+                )
+            # Swap action
+            else:
+                new_action = "Swap %i-%i for %i-%i" % (
+                    self.hands[pair0, 0],
+                    self.hands[pair0, 1],
+                    self.hands[pair0, actions[i][1]] - actions[i][2],
+                    self.hands[pair0, 1 - actions[i][1]] + actions[i][2],
+                )
+            actions_h.append(new_action)
 
+        return actions_h
 
     def list_actions_hu(self, pair0):
-      """
+        """
       Gives the possible actions for pair0 in text format (uniques).
 
       Parameter
@@ -233,11 +233,11 @@ class TapnSwap:
         list_actions_h method.
       """
 
-      actions_h = self.list_actions_h(pair0) 
-      seen = set()
-      return [action for action in actions_h 
-              if not (action in seen or seen.add(action))]
-
+        actions_h = self.list_actions_h(pair0)
+        seen = set()
+        return [
+            action for action in actions_h if not (action in seen or seen.add(action))
+        ]
 
     def list_actions(self, pair0):
         """
@@ -258,31 +258,31 @@ class TapnSwap:
 
         # List of non-unique actions
         actions = self.list_actions_tap(pair0) + self.list_actions_swap(pair0)
-        
+
         # Corresponding actions in text format
-        actions_h = self.list_actions_h(pair0)    # non-uniques
+        actions_h = self.list_actions_h(pair0)  # non-uniques
         actions_hu = self.list_actions_hu(pair0)  # uniques
 
         # Keep unique actions
         indices_to_del = []
         if len(actions_hu) != len(actions_h):
-          for action in range(len(actions_hu)):
-            indices = [i for i, x in enumerate(actions_h) 
-                        if x == actions_hu[action]]
-            if len(indices) > 1:
-              indices_to_del += indices[1:]
-        actions = [action for idx, action in enumerate(actions) 
-                    if idx not in indices_to_del]
+            for action in range(len(actions_hu)):
+                indices = [
+                    i for i, x in enumerate(actions_h) if x == actions_hu[action]
+                ]
+                if len(indices) > 1:
+                    indices_to_del += indices[1:]
+        actions = [
+            action for idx, action in enumerate(actions) if idx not in indices_to_del
+        ]
 
         return actions
-
 
     def show_hands(self):
         return self.hands
 
-
     def game_over(self):
-      """
+        """
       Check if game over.
 
       Return
@@ -294,17 +294,21 @@ class TapnSwap:
       * winner = 1 if self.hands[0] = [0,0]. 
       """
 
-      game_over = not bool( (self.hands[0][0] + 
-                              self.hands[0][1]) * (self.hands[1][0] + 
-                                                    self.hands[1][1]) )
+        game_over = not bool(
+            (self.hands[0][0] + self.hands[0][1])
+            * (self.hands[1][0] + self.hands[1][1])
+        )
 
-      winner = -1 * int(not game_over) + (int(game_over) * ( 
-                  int(not bool( self.hands[0][0] + self.hands[0][1] )) + 
-                  int(    bool( self.hands[1][0] + self.hands[1][1] ))  
-                                                            ) // 2)
+        winner = -1 * int(not game_over) + (
+            int(game_over)
+            * (
+                int(not bool(self.hands[0][0] + self.hands[0][1]))
+                + int(bool(self.hands[1][0] + self.hands[1][1]))
+            )
+            // 2
+        )
 
-      return game_over, winner
-
+        return game_over, winner
 
     def take_action(self, pair0, action):
         """
@@ -326,27 +330,26 @@ class TapnSwap:
         """
 
         # Take action
-        if action[0] == 0: # tap
-          self.tap(pair0, action[1], action[2])
-        elif action[0] == 1: # swap
-          self.swap(pair0, action[1], action[2])
-        else: raise ValueError  
+        if action[0] == 0:  # tap
+            self.tap(pair0, action[1], action[2])
+        elif action[0] == 1:  # swap
+            self.swap(pair0, action[1], action[2])
+        else:
+            raise ValueError
 
         reward = 0.0
 
         # Check if game is over
         game_over, winner = self.game_over()
         if game_over:
-          reward = 10.0
-          if winner != pair0:
-            reward = - reward
+            reward = 10.0
+            if winner != pair0:
+                reward = -reward
         return reward
-
 
     def reset(self):
         """
         Reset the count of fingers on each hand.
-        """     
+        """
 
         self.hands = np.array([[1, 1], [1, 1]])
-

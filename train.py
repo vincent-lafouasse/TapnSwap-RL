@@ -8,8 +8,8 @@ CSV format. It is possible to train an already trained model.
 """
 
 # Copyright (C) 2020, Jean-Rémy Conti, ENS Paris-Saclay (France).
-# All rights reserved. You should have received a copy of the GNU 
-# General Public License along with this program.  
+# All rights reserved. You should have received a copy of the GNU
+# General Public License along with this program.
 # If not, see <https://www.gnu.org/licenses/>.
 
 from tapnswap import TapnSwap
@@ -18,10 +18,18 @@ from agent import Agent, RandomAgent, RLAgent
 import numpy as np
 import time
 
-def game_2Agents(agent1, agent2, start_idx = -1, train = True, 
-                time_limit = None, n_games_test = 0,
-                play_checkpoint_usr = False, verbose = False):
-  """
+
+def game_2Agents(
+    agent1,
+    agent2,
+    start_idx=-1,
+    train=True,
+    time_limit=None,
+    n_games_test=0,
+    play_checkpoint_usr=False,
+    verbose=False,
+):
+    """
   Manages a game between 2 agents (agent1, agent2) potentially 
   time-limited, with possibility to train them, to confront 1 of 
   them through a game with user before the game between the 2 agents 
@@ -64,121 +72,130 @@ def game_2Agents(agent1, agent2, start_idx = -1, train = True,
     * test_results[3]: score of Random Agent.
   """
 
-  tapnswap = TapnSwap()
-  tapnswap.reset()
-
-  # Time of pause between several actions (if verbose)
-  delay = 2
-
-  # Preliminary game with the user 
-  if play_checkpoint_usr:
-    game_1vsAgent(tapnswap, 'test player', agent1, greedy = False)
+    tapnswap = TapnSwap()
     tapnswap.reset()
-  
-  # Select starting player
-  if start_idx == -1:
-    np.random.seed()
-    player_idx = np.random.randint(0,2)
-  else:
-    assert start_idx == 0 or start_idx == 1, \
-    'The starting agent index must be 0, 1 or -1.'
-    player_idx = start_idx
 
-  agents = [agent1, agent2]
-  names = ['Agent1', 'Agent2']
+    # Time of pause between several actions (if verbose)
+    delay = 2
 
-  count_rounds = 0
-  prev_state = []
-  prev_action = []
+    # Preliminary game with the user
+    if play_checkpoint_usr:
+        game_1vsAgent(tapnswap, "test player", agent1, greedy=False)
+        tapnswap.reset()
 
-  # Start game
-  game_over = False
-  while not game_over:
-    if verbose:
-      # Print current configuration
-      show_score(tapnswap, names, 1 - player_idx, invert = False)
-      time.sleep(delay)
+    # Select starting player
+    if start_idx == -1:
+        np.random.seed()
+        player_idx = np.random.randint(0, 2)
+    else:
+        assert (
+            start_idx == 0 or start_idx == 1
+        ), "The starting agent index must be 0, 1 or -1."
+        player_idx = start_idx
 
-    # Get current state
-    hands = tapnswap.show_hands().copy()
-    state = [ hands[player_idx], hands[1 - player_idx] ]
-    # Choose action
-    actions = tapnswap.list_actions(player_idx)
-    action = agents[player_idx].choose_action(state, actions, 
-                                              greedy = train)
-    # Take action and get reward
-    reward = tapnswap.take_action(player_idx, action)
+    agents = [agent1, agent2]
+    names = ["Agent1", "Agent2"]
 
-    if verbose:
-      # Print chosen action
-      seq = str(names[player_idx])
-      if action[0] == 0:
-        seq = seq + str(' tapped with ' + 
-                str(hands[player_idx, action[1]]) + ' on ' + 
-                str(hands[1 - player_idx, action[2]]))
-      else:
-        new_hands = tapnswap.show_hands().copy()
-        seq = seq + str(' swapped ' + str(hands[player_idx][0]) + 
-                        '-' + str(hands[player_idx][1]) + ' for ' + 
-                        str(new_hands[player_idx][0]) + '-' + 
-                        str(new_hands[player_idx][1]))
-      print(seq)
-      time.sleep(delay)
-      print()
-      # Print new configuration
-      show_score(tapnswap, names, player_idx)
-      time.sleep(delay)
-      # Print corresponding reward
-      print('Reward of ', names[player_idx], ' : ', reward)
-      time.sleep(delay)
-      print('----------------------------')
+    count_rounds = 0
+    prev_state = []
+    prev_action = []
 
-    game_over, winner = tapnswap.game_over()
+    # Start game
+    game_over = False
+    while not game_over:
+        if verbose:
+            # Print current configuration
+            show_score(tapnswap, names, 1 - player_idx, invert=False)
+            time.sleep(delay)
 
-    # Training
-    if train:
-      # Get new state
-      next_hands = tapnswap.show_hands().copy()
-      next_state = [ next_hands[player_idx], next_hands[1 - player_idx] ]
-      # Train playing agent for a winning move
-      if game_over:
-        agents[player_idx].update_Q(state, action, reward, next_state)
-      # Train waiting agent (response of the environment)
-      if count_rounds:
-        # New state in other's agent point of view
-        inv_next_state = [ next_hands[1 - player_idx], 
-                            next_hands[player_idx] ]
-        # Each waiting agent receives the transition with the 
-        # response of the environment for the new state
-        agents[1 - player_idx].update_Q(prev_state, prev_action, 
-                                        - reward, inv_next_state)
-      # Keep in memory previous state and action
-      prev_state = state
-      prev_action = action
+        # Get current state
+        hands = tapnswap.show_hands().copy()
+        state = [hands[player_idx], hands[1 - player_idx]]
+        # Choose action
+        actions = tapnswap.list_actions(player_idx)
+        action = agents[player_idx].choose_action(state, actions, greedy=train)
+        # Take action and get reward
+        reward = tapnswap.take_action(player_idx, action)
 
-    # Avoid loops
-    if time_limit is not None:
-      if count_rounds > time_limit and not game_over:
-        game_over = True
-        winner = -1
+        if verbose:
+            # Print chosen action
+            seq = str(names[player_idx])
+            if action[0] == 0:
+                seq = seq + str(
+                    " tapped with "
+                    + str(hands[player_idx, action[1]])
+                    + " on "
+                    + str(hands[1 - player_idx, action[2]])
+                )
+            else:
+                new_hands = tapnswap.show_hands().copy()
+                seq = seq + str(
+                    " swapped "
+                    + str(hands[player_idx][0])
+                    + "-"
+                    + str(hands[player_idx][1])
+                    + " for "
+                    + str(new_hands[player_idx][0])
+                    + "-"
+                    + str(new_hands[player_idx][1])
+                )
+            print(seq)
+            time.sleep(delay)
+            print()
+            # Print new configuration
+            show_score(tapnswap, names, player_idx)
+            time.sleep(delay)
+            # Print corresponding reward
+            print("Reward of ", names[player_idx], " : ", reward)
+            time.sleep(delay)
+            print("----------------------------")
 
-    # Next round
-    player_idx = 1 - player_idx
-    count_rounds += 1
+        game_over, winner = tapnswap.game_over()
 
-  # Test of agent1
-  test_results = []
-  if bool(n_games_test):
-    random_agent = RandomAgent()
-    test_results = compare_agents(agent1, random_agent, 
-                                  n_games = n_games_test, 
-                                  time_limit = None, verbose = False)
+        # Training
+        if train:
+            # Get new state
+            next_hands = tapnswap.show_hands().copy()
+            next_state = [next_hands[player_idx], next_hands[1 - player_idx]]
+            # Train playing agent for a winning move
+            if game_over:
+                agents[player_idx].update_Q(state, action, reward, next_state)
+            # Train waiting agent (response of the environment)
+            if count_rounds:
+                # New state in other's agent point of view
+                inv_next_state = [next_hands[1 - player_idx], next_hands[player_idx]]
+                # Each waiting agent receives the transition with the
+                # response of the environment for the new state
+                agents[1 - player_idx].update_Q(
+                    prev_state, prev_action, -reward, inv_next_state
+                )
+            # Keep in memory previous state and action
+            prev_state = state
+            prev_action = action
 
-  return game_over, winner, test_results
+        # Avoid loops
+        if time_limit is not None:
+            if count_rounds > time_limit and not game_over:
+                game_over = True
+                winner = -1
+
+        # Next round
+        player_idx = 1 - player_idx
+        count_rounds += 1
+
+    # Test of agent1
+    test_results = []
+    if bool(n_games_test):
+        random_agent = RandomAgent()
+        test_results = compare_agents(
+            agent1, random_agent, n_games=n_games_test, time_limit=None, verbose=False
+        )
+
+    return game_over, winner, test_results
 
 
-def compare_agents(agent1, agent2, n_games, time_limit = None, verbose = True):
-  """
+def compare_agents(agent1, agent2, n_games, time_limit=None, verbose=True):
+    """
   Manages competitive games between 2 agents and return final scores.
 
   Parameters
@@ -201,39 +218,52 @@ def compare_agents(agent1, agent2, n_games, time_limit = None, verbose = True):
     results[3]: score of agent2.
   """
 
-  start_idx = 0
-  scores = [0,0]
+    start_idx = 0
+    scores = [0, 0]
 
-  # Start games
-  if verbose:
-    print('Number of games:')
+    # Start games
+    if verbose:
+        print("Number of games:")
 
-  for game in range(1, n_games + 1):
-    if game % (n_games // 10) == 0 and verbose:
-      print(game, '/', n_games)
+    for game in range(1, n_games + 1):
+        if game % (n_games // 10) == 0 and verbose:
+            print(game, "/", n_games)
 
-    game_over, winner, _ = game_2Agents(agent1, agent2, 
-                                        start_idx = start_idx, 
-                                        train = False, 
-                                        time_limit = time_limit, 
-                                        n_games_test = 0, 
-                                        play_checkpoint_usr = False, 
-                                        verbose = False)
-    # Update scores
-    if winner in [0,1]:
-      scores[winner] += 1
+        game_over, winner, _ = game_2Agents(
+            agent1,
+            agent2,
+            start_idx=start_idx,
+            train=False,
+            time_limit=time_limit,
+            n_games_test=0,
+            play_checkpoint_usr=False,
+            verbose=False,
+        )
+        # Update scores
+        if winner in [0, 1]:
+            scores[winner] += 1
 
-    start_idx = 1 - start_idx
+        start_idx = 1 - start_idx
 
-  # Output results
-  results = [scores[0]+scores[1], n_games, scores[0], scores[1]]
+    # Output results
+    results = [scores[0] + scores[1], n_games, scores[0], scores[1]]
 
-  return results
+    return results
 
 
-def train(n_epochs, epsilon, gamma, load_model, filename, random_opponent, 
-          n_games_test, freq_test, n_skip_games = int(0), verbose = False):
-  """
+def train(
+    n_epochs,
+    epsilon,
+    gamma,
+    load_model,
+    filename,
+    random_opponent,
+    n_games_test,
+    freq_test,
+    n_skip_games=int(0),
+    verbose=False,
+):
+    """
   Train 2 agents by making them play and learn together. Save the
   learned Q-function into CSV file. It is possible to confront 1 of 
   the agents (against either the user or a Random Agent) during 
@@ -295,109 +325,124 @@ def train(n_epochs, epsilon, gamma, load_model, filename, random_opponent,
     n_games test].
   """
 
-  # Learning agent
-  agent1 = RLAgent(epsilon, gamma)
-  if load_model is not None:
-    agent1.load_model(load_model)
-  
-  # Choose opponent 
-  if random_opponent:
-    agent2 = RandomAgent()
-    time_limit = None
-    print('Training vs Random')
-  else:
-    agent2 = RLAgent(epsilon, gamma)
+    # Learning agent
+    agent1 = RLAgent(epsilon, gamma)
     if load_model is not None:
-      agent2.load_model(load_model)
-    time_limit = None
-    print('Training vs Self')
-  
-  start_idx = 0
-  scores = [0,0]
+        agent1.load_model(load_model)
 
-  # If the user only confronts the agent at the last epoch 
-  # or if no confrontation
-  if n_skip_games in [-1,0]:
-    n_skip_games = n_epochs - n_skip_games
+    # Choose opponent
+    if random_opponent:
+        agent2 = RandomAgent()
+        time_limit = None
+        print("Training vs Random")
+    else:
+        agent2 = RLAgent(epsilon, gamma)
+        if load_model is not None:
+            agent2.load_model(load_model)
+        time_limit = None
+        print("Training vs Self")
 
-  # Boolean for game between the user and agent1 preceding a game 
-  # between agent1 and agent2
-  play_checkpoint_usr = False
+    start_idx = 0
+    scores = [0, 0]
 
-  # If there is a test of agent1 at the last epoch only or no test 
-  if freq_test in [-1,0]:
-    freq_test = n_epochs - freq_test
+    # If the user only confronts the agent at the last epoch
+    # or if no confrontation
+    if n_skip_games in [-1, 0]:
+        n_skip_games = n_epochs - n_skip_games
 
-  # Number of games between agent1 and a Random Agent for testing
-  n_games_test_mem = n_games_test
-  learning_results = []
+    # Boolean for game between the user and agent1 preceding a game
+    # between agent1 and agent2
+    play_checkpoint_usr = False
 
-  # Start training
-  print('Training epoch:')
-  for epoch in range(1, n_epochs + 1): 
-    
-    if epoch % (n_epochs // 10) == 0:
-      print(epoch, '/', n_epochs)
+    # If there is a test of agent1 at the last epoch only or no test
+    if freq_test in [-1, 0]:
+        freq_test = n_epochs - freq_test
 
-    #Update boolean for playing with user
-    play_checkpoint_usr = bool(epoch % n_skip_games == 0)
-    if play_checkpoint_usr:
-      # Print training status
-      print('Number of games: ', epoch)
-      print('Scores: ', scores)
-      # Ask user to play
-      play = int(input('Play ? (1 Yes | 0 No)\n'))
-      play_checkpoint_usr = bool(play)
+    # Number of games between agent1 and a Random Agent for testing
+    n_games_test_mem = n_games_test
+    learning_results = []
 
-    # Update boolean for test
-    n_games_test = int(epoch % freq_test == 0) * n_games_test_mem
+    # Start training
+    print("Training epoch:")
+    for epoch in range(1, n_epochs + 1):
 
-    # Start game
-    game_over, winner, test_results = game_2Agents(agent1, agent2, 
-                                    start_idx = start_idx, train = True, 
-                                    time_limit = time_limit, 
-                                    n_games_test = n_games_test,
-                                    play_checkpoint_usr = play_checkpoint_usr,
-                                    verbose = verbose)
-    
-    assert game_over, str('Game not over but new game' +
-                          ' beginning during training')
+        if epoch % (n_epochs // 10) == 0:
+            print(epoch, "/", n_epochs)
 
-    if winner in [0,1]:
-      scores[winner] += 1
+        # Update boolean for playing with user
+        play_checkpoint_usr = bool(epoch % n_skip_games == 0)
+        if play_checkpoint_usr:
+            # Print training status
+            print("Number of games: ", epoch)
+            print("Scores: ", scores)
+            # Ask user to play
+            play = int(input("Play ? (1 Yes | 0 No)\n"))
+            play_checkpoint_usr = bool(play)
 
-    # Save test games of agent1 against a Random Agent
-    if bool(n_games_test):
-      assert len(test_results) != 0, \
-      'Agent1 has been tested but there is no result of that.'
-      learning_results.append([
-                  epoch, test_results[2], test_results[0], test_results[1]])
+        # Update boolean for test
+        n_games_test = int(epoch % freq_test == 0) * n_games_test_mem
 
-    # Next round
-    start_idx = 1 - start_idx
+        # Start game
+        game_over, winner, test_results = game_2Agents(
+            agent1,
+            agent2,
+            start_idx=start_idx,
+            train=True,
+            time_limit=time_limit,
+            n_games_test=n_games_test,
+            play_checkpoint_usr=play_checkpoint_usr,
+            verbose=verbose,
+        )
 
-  # Save Q-function of agent1
-  np.savetxt(str('Models/' + filename + '.csv'), agent1.Q, delimiter=',')
-  # Save stats for learning rate of agent1
-  np.savetxt(str('Models/data/count_' + filename + '.csv'), 
-              agent1.count_state_action, delimiter=',')
+        assert game_over, str(
+            "Game not over but new game" + " beginning during training"
+        )
 
-  return learning_results
+        if winner in [0, 1]:
+            scores[winner] += 1
+
+        # Save test games of agent1 against a Random Agent
+        if bool(n_games_test):
+            assert (
+                len(test_results) != 0
+            ), "Agent1 has been tested but there is no result of that."
+            learning_results.append(
+                [epoch, test_results[2], test_results[0], test_results[1]]
+            )
+
+        # Next round
+        start_idx = 1 - start_idx
+
+    # Save Q-function of agent1
+    np.savetxt(str("Models/" + filename + ".csv"), agent1.Q, delimiter=",")
+    # Save stats for learning rate of agent1
+    np.savetxt(
+        str("Models/data/count_" + filename + ".csv"),
+        agent1.count_state_action,
+        delimiter=",",
+    )
+
+    return learning_results
 
 
 if __name__ == "__main__":
-  
-  train(n_epochs = 5000, epsilon = 0.6, gamma = 1.0, load_model = None, 
-    filename = 'greedy0_6_vsSelf_test', random_opponent = False, 
-    n_games_test = 0, freq_test = -1, n_skip_games = -1, verbose = False)
 
+    train(
+        n_epochs=5000,
+        epsilon=0.6,
+        gamma=1.0,
+        load_model=None,
+        filename="greedy0_6_vsSelf_test",
+        random_opponent=False,
+        n_games_test=0,
+        freq_test=-1,
+        n_skip_games=-1,
+        verbose=False,
+    )
 
-  agent1 = RLAgent()
-  agent1.load_model('greedy0_2_vsRandomvsSelf')
-  agent2 = RLAgent()
-  agent2.load_model('greedy0_6_vsSelf_test')
-  results = compare_agents(agent1, agent2, n_games = 10, 
-                            time_limit = None, verbose = False)
-  print(results)
-
-
+    agent1 = RLAgent()
+    agent1.load_model("greedy0_2_vsRandomvsSelf")
+    agent2 = RLAgent()
+    agent2.load_model("greedy0_6_vsSelf_test")
+    results = compare_agents(agent1, agent2, n_games=10, time_limit=None, verbose=False)
+    print(results)
