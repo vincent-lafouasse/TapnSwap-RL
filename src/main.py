@@ -58,21 +58,10 @@ def game_manager() -> bool:
         if difficulty_setting == "BACK":
             return True
 
-        # Define agent
-        if difficulty_setting == "EASY":
-            agent = RandomAgent()
-        else:
-            # Load agent
-            agent = RLAgent()
-            agent.load_model("greedy0_2_vsRandomvsSelf")
-
-        # Ask player's name
+        agent = load_agent(difficulty_setting)
         player = input_names(n_players=1)
-
-        # Init scores
         scores = [0, 0]
 
-        # Games
         tapnswap = TapnSwap()
         over = False
         while not over:
@@ -117,6 +106,16 @@ def game_manager() -> bool:
 
 LINE_LENGTH = 80
 CENTER_COLUMN = int(LINE_LENGTH / 2)
+
+
+def load_agent(difficulty_setting):
+    assert difficulty_setting in "EASY", "HARD"
+    if difficulty_setting == "EASY":
+        agent = RandomAgent()
+    else:
+        agent = RLAgent()
+        agent.load_model("greedy0_2_vsRandomvsSelf")
+    return agent
 
 
 def pick_option(options, prompt, display_options=True):
