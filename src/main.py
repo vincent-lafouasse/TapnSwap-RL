@@ -119,10 +119,12 @@ LINE_LENGTH = 80
 CENTER_COLUMN = int(LINE_LENGTH / 2)
 
 
-def pick_option(options, prompt):
-    for option in options:
-        print(option.center(CENTER_COLUMN) + "\n")
-    print("\n" + prompt)
+def pick_option(options, prompt, display_options=True):
+    if display_options:
+        for option in options:
+            print(option.center(CENTER_COLUMN) + "\n")
+        print()
+    print(prompt)
     return get_user_input_between(options).upper()
 
 
