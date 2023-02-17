@@ -32,26 +32,26 @@ def game_manager() -> bool:
     if command == "QUIT":
         return False
 
-    while command == "RULES":
+    if command == "RULES":
         print_rules()
         print("Enter anything to go back to title.")
         input()
         return True
 
     new_frame()
-    game_mode = pick_option(
-        ["Solo", "Versus", "Back"],
+    game_mode_prompt = (
         "Do you want to play against the computer or against a friend ? "
-        + "Or do you want to go back to title",
     )
+    game_mode_prompt += "Or do you want to go back to title"
+    game_mode = pick_option(["Solo", "Versus", "Back"], game_mode_prompt)
 
     # 1 player
     if game_mode == "SOLO":
         new_frame()
+        difficulty_setting_prompt = "Choose the difficulty setting, "
+        difficulty_setting_prompt += "or enter Back to go back to title"
         difficulty_setting = pick_option(
-            ["Easy", "Hard", "Back"],
-            "Choose the difficulty setting, "
-            + "or enter Back to go back to title",
+            ["Easy", "Hard", "Back"], difficulty_setting_prompt
         )
 
         # Go back
