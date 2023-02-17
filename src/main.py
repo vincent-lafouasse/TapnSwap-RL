@@ -15,10 +15,11 @@ import os
 
 
 def main():
-    game_manager()
+    while game_manager():
+        continue
 
 
-def game_manager() -> None:
+def game_manager() -> bool:
     """
     Game manager, used for navigation among different choices offered to user.
     """
@@ -29,17 +30,13 @@ def game_manager() -> None:
     command = pick_option(["PLAY", "RULES", "QUIT"], command_prompt)
 
     if command == "QUIT":
-        return None
+        return False
 
     while command == "RULES":
         print_rules()
         print("Enter anything to go back to title.")
         input()
-        new_frame()
-        command = pick_option(
-            ["PLAY", "RULES"],
-            "Enter Play to start playing or Rules to read the rules.",
-        )
+        return True
 
     new_frame()
     game_mode = pick_option(
@@ -59,7 +56,7 @@ def game_manager() -> None:
 
         # Go back
         if difficulty_setting == "BACK":
-            game_manager()
+            return True
 
         # Define agent
         if difficulty_setting == "EASY":
@@ -89,7 +86,7 @@ def game_manager() -> None:
                 # Go back
                 if not restart:
                     over = True
-                    game_manager()
+                    return True
 
     # 2 players
     if game_mode == "VERSUS":
@@ -112,10 +109,10 @@ def game_manager() -> None:
                 # Go back
                 if not restart:
                     over = True
-                    game_manager()
+                    return True
 
     if game_mode == "BACK":
-        game_manager()
+        return True
 
 
 LINE_LENGTH = 80
